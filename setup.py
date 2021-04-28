@@ -33,11 +33,10 @@ cmdclass = {"build_ext": BuildExt}
 
 setup(
     name="vplanet",
-    author="Rodrigo Luger",
-    author_email="rodluger@gmail.com",
-    # url="https://github.com/rodluger/starry",
-    # description="Analytic occultation light curves for astronomy.",
-    # long_description=open("README.md", "r").read(),
+    author="Rory Barnes",
+    author_email="rkb9@uw.edu",
+    url="https://github.com/VirtualPlanetaryLaboratory/vplanet",
+    description="The virtual planet simulator",
     license="MIT",
     packages=find_packages(),
     ext_modules=ext_modules,
