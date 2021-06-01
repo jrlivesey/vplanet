@@ -41,6 +41,7 @@ jobs:
           python -m pip install -e .
 
       - name: Run tests
+        id: tests
         if: steps.install.outcome == 'success'
         shell: bash -l {0}
         run: python -m pytest -v tests --junitxml=junit/test-results.xml
@@ -59,6 +60,15 @@ jobs:
         with:
           files: junit/test-*.xml
           comment_mode: update last
+
+      - name: Generate Coverage
+        id: coverage
+        if: steps.tests.outcome == 'success'
+        shell: bash -l {0}
+        run: |
+          mkdir -p gcov && cd gcov && gcc -coverage -o ../bin/vplanet ../src/*.c -lm
+          pytest -v ../tests
+          lcov --capture --directory gcov --output-file .coverage && genhtml .coverage --output-directory gcov/html
 
       - name: Publish coverage
         if: steps.install.outcome == 'success'
