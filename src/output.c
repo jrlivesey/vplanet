@@ -544,6 +544,7 @@ void WriteMass(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                char cUnit[]) {
 
   *dTmp = body[iBody].dMass;
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
@@ -768,6 +769,34 @@ void WriteOrbSemi(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     fsUnitsLength(units->iLength, cUnit);
   }
 }
+
+/*
+ * P
+ */
+
+ void WritePericenter(BODY *body, CONTROL *control, OUTPUT *output,
+                  SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                  double *dTmp, char cUnit[]) {
+
+  if (iBody > 0) {
+    if (body[iBody].bDistOrb || body[iBody].bEqtide) {
+      *dTmp = body[iBody].dSemi*sqrt(1 - body[iBody].dHecc*body[iBody].dHecc +
+                                     body[iBody].dKecc*body[iBody].dKecc);
+    } else if (body[iBody].bSpiNBody) {
+      *dTmp = body[iBody].dSemi*sqrt(1 - body[iBody].dEcc*body[iBody].dEcc);
+    }
+  } else {
+    *dTmp = -1;
+  }
+
+   if (output->bDoNeg[iBody]) {
+     *dTmp *= output->dNeg;
+     strcpy(cUnit, output->cNeg);
+   } else {
+     *dTmp /= fdUnitsLength(units->iLength);
+     fsUnitsLength(units->iLength, cUnit);
+   }
+ }
 
 /*
  * R
@@ -1603,6 +1632,19 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ORBSEMI].iModuleBit =
         EQTIDE + DISTORB + BINARY + GALHABIT + POISE + SPINBODY + ATMESC;
   fnWrite[OUT_ORBSEMI] = &WriteOrbSemi;
+
+  /*
+   * P
+   */
+
+ sprintf(output[OUT_PERICENTER].cName, "Pericenter");
+ sprintf(output[OUT_PERICENTER].cDescr, "Pericenter Distance");
+ sprintf(output[OUT_PERICENTER].cNeg, "AU");
+ output[OUT_PERICENTER].bNeg = 1;
+ output[OUT_PERICENTER].dNeg = 1. / AUM;
+ output[OUT_PERICENTER].iNum = 1;
+ output[OUT_PERICENTER].iModuleBit = EQTIDE + DISTORB + SPINBODY;
+ fnWrite[OUT_PERICENTER] = &WritePericenter;
 
   /*
    * R
