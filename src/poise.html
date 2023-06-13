@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>poise &mdash; VPLanet 2.2.10
+  <title>poise &mdash; VPLanet 2.3.46
  documentation</title>
   
 
@@ -41,11 +41,11 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="VPLanet 2.2.10
+    <link rel="top" title="VPLanet 2.3.46
  documentation" href="../index.html"/>
         <link rel="up" title="C API" href="../src.html"/>
-        <link rel="next" title="spinbody" href="spinbody.html"/>
-        <link rel="prev" title="galhabit" href="galhabit.html"/> 
+        <link rel="next" title="output" href="output.html"/>
+        <link rel="prev" title="spinbody" href="spinbody.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -73,7 +73,7 @@
             
             
               <div class="version">
-                2.2.10
+                2.3.46
 
               </div>
             
@@ -102,34 +102,34 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
-<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">poise</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#poise-c">poise.c</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#poise-h">poise.h</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
 <li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
 <li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -1278,7 +1278,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv418ForceBehaviorPoiseP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii">
 <span id="_CPPv318ForceBehaviorPoiseP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii"></span><span id="_CPPv218ForceBehaviorPoiseP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii"></span><span id="ForceBehaviorPoise__BODYP.MODULEP.EVOLVEP.IOP.SYSTEMP.UPDATEP.fnUpdateVariablePPP.i.i"></span><span class="target" id="poise_8c_1a842e63632fdf88a91967e36f368cc35b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ForceBehaviorPoise</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE"><span class="n"><span class="pre">MODULE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">module</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO"><span class="n"><span class="pre">IO</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">io</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iModule</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418ForceBehaviorPoiseP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Force behavior function for POISE. This is where the magic happens POISE works entirely in force behavior because it needs to solve several PDEs (not well modeled with RK4). First, the EBM (climate) is run for several orbits, then the ice sheet flow. The EBM can be periodically rerun needed.</p>
+<dd><p>Force behavior function for POISE. This is where the magic happens&amp;#8212; POISE works entirely in force behavior because it needs to solve several PDEs (not well modeled with RK4). First, the EBM (climate) is run for several orbits, then the ice sheet flow. The EBM can be periodically rerun needed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1736,6 +1736,66 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv425fvPoiseSeasonalInitializeP4BODYii">
+<span id="_CPPv325fvPoiseSeasonalInitializeP4BODYii"></span><span id="_CPPv225fvPoiseSeasonalInitializeP4BODYii"></span><span id="fvPoiseSeasonalInitialize__BODYP.i.i"></span><span class="target" id="poise_8c_1abda95f8b9f34b6ce5aa6b8a4627aca84"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvPoiseSeasonalInitialize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iYear</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv425fvPoiseSeasonalInitializeP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414fvCalcPlanckABP4BODYii">
+<span id="_CPPv314fvCalcPlanckABP4BODYii"></span><span id="_CPPv214fvCalcPlanckABP4BODYii"></span><span id="fvCalcPlanckAB__BODYP.i.i"></span><span class="target" id="poise_8c_1a1c635f235e33e4935913b61aced5f851"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvCalcPlanckAB</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fvCalcPlanckABP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418fvFluxesByLatitudeP4BODYiii">
+<span id="_CPPv318fvFluxesByLatitudeP4BODYiii"></span><span id="_CPPv218fvFluxesByLatitudeP4BODYiii"></span><span id="fvFluxesByLatitude__BODYP.i.i.i"></span><span class="target" id="poise_8c_1ab5af944da0b63ee6f90f3dea8d29b01c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvFluxesByLatitude</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNyear</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNstep</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fvFluxesByLatitudeP4BODYiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv431fvPoiseAnnualAveragesByLatitudeP4BODYii">
+<span id="_CPPv331fvPoiseAnnualAveragesByLatitudeP4BODYii"></span><span id="_CPPv231fvPoiseAnnualAveragesByLatitudeP4BODYii"></span><span id="fvPoiseAnnualAveragesByLatitude__BODYP.i.i"></span><span class="target" id="poise_8c_1ab0a1f6b733408e101132f6adbe3043f5"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvPoiseAnnualAveragesByLatitude</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv431fvPoiseAnnualAveragesByLatitudeP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417fvPoiseDailyPropsP4BODYiiii">
+<span id="_CPPv317fvPoiseDailyPropsP4BODYiiii"></span><span id="_CPPv217fvPoiseDailyPropsP4BODYiiii"></span><span id="fvPoiseDailyProps__BODYP.i.i.i.i"></span><span class="target" id="poise_8c_1aca0550ab212c14ac5ad752be66abc399"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvPoiseDailyProps</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNyear</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNstep</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fvPoiseDailyPropsP4BODYiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv421fvPoiseSeasonalMinMaxP4BODYii">
+<span id="_CPPv321fvPoiseSeasonalMinMaxP4BODYii"></span><span id="_CPPv221fvPoiseSeasonalMinMaxP4BODYii"></span><span id="fvPoiseSeasonalMinMax__BODYP.i.i"></span><span class="target" id="poise_8c_1a291237a8345ecc3a06dca78dda0810ad"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvPoiseSeasonalMinMax</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421fvPoiseSeasonalMinMaxP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420fvCalculateIceSheetsP4BODYdiii">
+<span id="_CPPv320fvCalculateIceSheetsP4BODYdiii"></span><span id="_CPPv220fvCalculateIceSheetsP4BODYdiii"></span><span id="fvCalculateIceSheets__BODYP.double.i.i.i"></span><span class="target" id="poise_8c_1a0844e5dd16fc0fad1f33dec91fac85b7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvCalculateIceSheets</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dStepsize</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNstep</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420fvCalculateIceSheetsP4BODYdiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv427fvCalculateFluxesByLatitudeP4BODYiii">
+<span id="_CPPv327fvCalculateFluxesByLatitudeP4BODYiii"></span><span id="_CPPv227fvCalculateFluxesByLatitudeP4BODYiii"></span><span id="fvCalculateFluxesByLatitude__BODYP.i.i.i"></span><span class="target" id="poise_8c_1a7ff5da3d5a3d1142b562860b198ff78e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvCalculateFluxesByLatitude</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNday</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427fvCalculateFluxesByLatitudeP4BODYiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418fvPoiseGlobalPropsP4BODYi">
+<span id="_CPPv318fvPoiseGlobalPropsP4BODYi"></span><span id="_CPPv218fvPoiseGlobalPropsP4BODYi"></span><span id="fvPoiseGlobalProps__BODYP.i"></span><span class="target" id="poise_8c_1a625d0a4bf9940ebd69cd15fecead688a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvPoiseGlobalProps</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fvPoiseGlobalPropsP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414fvFinishSeaIceP4BODYdiiiii">
+<span id="_CPPv314fvFinishSeaIceP4BODYdiiiii"></span><span id="_CPPv214fvFinishSeaIceP4BODYdiiiii"></span><span id="fvFinishSeaIce__BODYP.double.i.i.i.i.i"></span><span class="target" id="poise_8c_1a8d6f6cfc563845bfb516d971043e7550"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvFinishSeaIce</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dStepsize</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNyear</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNday</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNstep</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fvFinishSeaIceP4BODYdiiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417fvCalculateSeaIceP4BODYdiiii">
+<span id="_CPPv317fvCalculateSeaIceP4BODYdiiii"></span><span id="_CPPv217fvCalculateSeaIceP4BODYdiiii"></span><span id="fvCalculateSeaIce__BODYP.double.i.i.i.i"></span><span class="target" id="poise_8c_1ae40a9fc4d69552ad70cc6fdc1ff6586c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvCalculateSeaIce</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dStepsize</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNyear</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNday</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNstep</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fvCalculateSeaIceP4BODYdiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414fvStaticSeaIceP4BODYdiiii">
+<span id="_CPPv314fvStaticSeaIceP4BODYdiiii"></span><span id="_CPPv214fvStaticSeaIceP4BODYdiiii"></span><span id="fvStaticSeaIce__BODYP.double.i.i.i.i"></span><span class="target" id="poise_8c_1a3c51803eb683a976d93a7e0d3b76649e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvStaticSeaIce</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dStepsize</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNyear</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNday</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNstep</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fvStaticSeaIceP4BODYdiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv413PoiseSeasonalP4BODYi">
@@ -2528,10 +2588,10 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="spinbody.html" class="btn btn-neutral float-right" title="spinbody" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="output.html" class="btn btn-neutral float-right" title="output" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="galhabit.html" class="btn btn-neutral" title="galhabit" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="spinbody.html" class="btn btn-neutral" title="spinbody" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -2561,7 +2621,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'2.2.10',
+            VERSION:'2.3.46',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

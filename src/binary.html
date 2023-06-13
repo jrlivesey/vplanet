@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>binary &mdash; VPLanet 2.2.10
+  <title>binary &mdash; VPLanet 2.3.46
  documentation</title>
   
 
@@ -41,11 +41,11 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="VPLanet 2.2.10
+    <link rel="top" title="VPLanet 2.3.46
  documentation" href="../index.html"/>
         <link rel="up" title="C API" href="../src.html"/>
-        <link rel="next" title="output" href="output.html"/>
-        <link rel="prev" title="atmesc" href="atmesc.html"/> 
+        <link rel="next" title="galhabit" href="galhabit.html"/>
+        <link rel="prev" title="distorb" href="distorb.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -73,7 +73,7 @@
             
             
               <div class="version">
-                2.2.10
+                2.3.46
 
               </div>
             
@@ -102,34 +102,34 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
-<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
 <li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
 <li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">binary</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#binary-c">binary.c</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#binary-h">binary.h</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -203,27 +203,24 @@
 </dd>
 <dt><strong>Date</strong></dt><dd><p>Jan 12 2016</p>
 </dd>
-<dt><strong>Description</strong></dt><dd><p><p><blockquote>
+<dt><strong>Description</strong></dt><dd><p><blockquote>
 <div><p>Module to model circumbinary planet dynamics.</p>
+</div></blockquote>
+<p>(circumbinary planet(s))</p>
+<p>body approximation and hence the CBPs are not allowed to graviationally
+interact.</p>
+</p>
+</dd>
+</dl>
+</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>body 0 = primary star, body 1 = secondary star, body 2+ = CBP</p>
 </div>
-</div></blockquote>
-<p>(circumbinary planet(s))</p>
-<blockquote>
-<div><div class="admonition note">
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The <a href="#id1"><span class="problematic" id="id2">:cite:`Leung2013`</span></a> theory ONLY applies to the restricted 3</p>
 </div>
-</div></blockquote>
-<p>body approximation and hence the CBPs are not allowed to graviationally
-interact.</p>
-</p>
- </p>
-</dd>
-</dl>
-</p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
 <dl class="cpp function">
@@ -613,7 +610,7 @@ interact.</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv415fndComputeLongAP4BODYi">
 <span id="_CPPv315fndComputeLongAP4BODYi"></span><span id="_CPPv215fndComputeLongAP4BODYi"></span><span id="fndComputeLongA__BODYP.i"></span><span class="target" id="binary_8c_1aece6f25927d62c1d60175d1cb88a3341"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndComputeLongA</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fndComputeLongAP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Compute a CBP’s longitude of ascending node See: <a class="reference external" href="https://en.wikipedia.org/wiki/Longitude_of_the_ascending_node">https://en.wikipedia.org/wiki/Longitude_of_the_ascending_node</a> </p>
+<dd><p>Compute a CBP’s longitude of ascending node See: <a class="reference external" href="https://en.wikipedia.org/wiki/Longitude_of_the_ascending_node">https://en.wikipedia.org/wiki/Longitude_of_the_ascending_node</a></p>
 </dd></dl>
 
 <dl class="cpp function">
@@ -657,7 +654,7 @@ interact.</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv412fndRocheLobeP4BODY">
 <span id="_CPPv312fndRocheLobeP4BODY"></span><span id="_CPPv212fndRocheLobeP4BODY"></span><span id="fndRocheLobe__BODYP"></span><span class="target" id="binary_8c_1a4e6340911bb88c3e7bfc8591be2858a9"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndRocheLobe</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fndRocheLobeP4BODY" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Compute the roche lobe of the primary according to Egglton’s formula given in <a class="reference external" href="https://en.wikipedia.org/wiki/Roche_lobe">https://en.wikipedia.org/wiki/Roche_lobe</a> </p>
+<dd><p>Compute the roche lobe of the primary according to Egglton’s formula given in <a class="reference external" href="https://en.wikipedia.org/wiki/Roche_lobe">https://en.wikipedia.org/wiki/Roche_lobe</a></p>
 </dd></dl>
 
 <dl class="cpp function">
@@ -1044,10 +1041,10 @@ interact.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="output.html" class="btn btn-neutral float-right" title="output" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="galhabit.html" class="btn btn-neutral float-right" title="galhabit" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="atmesc.html" class="btn btn-neutral" title="atmesc" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="distorb.html" class="btn btn-neutral" title="distorb" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -1077,7 +1074,7 @@ interact.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'2.2.10',
+            VERSION:'2.3.46',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

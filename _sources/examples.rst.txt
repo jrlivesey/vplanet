@@ -12,40 +12,44 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/EarthInterior
-   examples/MiniNeptuneEvap
-   examples/MagneticBraking
-   examples/CassiniStates
-   examples/TideLock
-   examples/ApseLock
-   examples/STEEP
-   examples/ChaoticResonances
-   examples/ParameterSweep
-   examples/MagmOc_Trappist1g
-   examples/CassiniMulti
-   examples/HabEvapCore
-   examples/StellarEvol
-   examples/VenusApproxInterior
-   examples/VenusWaterLoss
-   examples/SS_NBody
    examples/CircumbinaryOrbit
-   examples/BinaryTides
-   examples/IoHeat
-   examples/EarthClimate
-   examples/IceBelts
-   examples/GalaxyEffects
+   examples/VenusWaterLoss
+   examples/MiniNeptuneEvap
+   examples/RadHeat
+   examples/AtmEscFlareProxCen
+   examples/MagmOc_Trappist1g
+   examples/ApseLock
+   examples/MagmOc_Earth
+   examples/VenusApproxInterior
+   examples/SS_NBody
+   examples/StellarEvol
+   examples/FfdProxCen
+   examples/ChaoticResonances
    examples/MagmOc_GJ1132b
-   examples/NBodyAtmEsc
-   examples/WaterLossTides
-   examples/AtmEscRegimes
+   examples/STEEP
+   examples/CassiniMulti
+   examples/MDwarfLuminosity
    examples/AtmEscKepler-36
    examples/HLossTides
+   examples/NBodyAtmEsc
+   examples/CassiniStates
+   examples/GalaxyEffects
+   examples/AtmEscRegimes
+   examples/EarthClimate
    examples/DampedCBP
    examples/SSDistOrbDistRot
-   examples/RadHeat
+   examples/BinaryTides
    examples/AbioticO2
+   examples/IceBelts
+   examples/TideLock
+   examples/MagneticBraking
+   examples/IoHeat
+   examples/HabEvapCore
+   examples/EarthInterior
+   examples/ParameterSweep
    examples/TidalEarth
-   examples/MagmOc_Earth
+   examples/WaterLossTides
+   examples/HabitableZone
 
 
 Broken
