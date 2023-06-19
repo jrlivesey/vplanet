@@ -51,6 +51,7 @@
 #define SPINBODY 4096
 #define DISTRES 8192
 #define MAGMOC 16384
+#define DAISY 32768
 
 /* Fundamental constants; Some of these are taken from the IAU working
  group on Fundamental constants, as described in Prsa et al. 2016. */
