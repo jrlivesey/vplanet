@@ -17,6 +17,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+
+/* JOSEPH'S DANGER ZONE */
+// double dGammaPrev = 0.;
+/* END DANGER ZONE */
+
+
+
 void BodyCopyDistRot(BODY *dest, BODY *src, int iTideModel, int iNumBodies,
                      int iBody) {
   int iIndex, iPert;
@@ -1239,7 +1247,6 @@ void WriteZoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   }
 }
 
-
 void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                       double *dTmp, char cUnit[]) {
@@ -1471,6 +1478,20 @@ void WritePrecFNat(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
 }
 
+
+
+/* JOSEPH'S DANGER ZONE */
+
+void WriteEqCassOne(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
+                    char cUnit[]) {
+  *dTmp = fndEqCassOne(body, control, system, iBody);
+}
+
+/* END DANGER ZONE */
+
+
+
 void InitializeOutputDistRot(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_DOBLDTDISTROT].cName, "DOblDtDistRot");
@@ -1563,6 +1584,14 @@ void InitializeOutputDistRot(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_PRECATIMEDISTROT].iNum       = 1;
   output[OUT_PRECATIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_PRECATIMEDISTROT]           = &WritePrecATimeDistRot;
+
+  sprintf(output[OUT_EQCASS1].cName, "EquilibriumCassiniOne");
+  sprintf(output[OUT_EQCASS1].cDescr,
+          "Predicted misalignment of Cassini state vectors, according to me");
+  output[OUT_EQCASS1].bNeg       = 0;
+  output[OUT_EQCASS1].iNum       = 1;
+  output[OUT_EQCASS1].iModuleBit = DISTROT;
+  fnWrite[OUT_EQCASS1]           = &WriteEqCassOne;
 
   sprintf(output[OUT_CASS1].cName, "CassiniOne");
   sprintf(output[OUT_CASS1].cDescr,
@@ -2142,3 +2171,62 @@ double fndDistRotExtDzDt(BODY *body, SYSTEM *system, int *iaBody) {
   return body[iaBody[0]].dYobl * fndObliquityBExt(body, system, iaBody) -
          body[iaBody[0]].dXobl * fndObliquityAExt(body, system, iaBody);
 }
+
+
+
+/* JOSEPH'S DANGER ZONE */
+
+double fndDalphaDt(BODY *body, SYSTEM *system, int *iaBody) {
+  // Time derivative of axial precession frequency: d(alpha)/dt
+  return 0;
+}
+
+double fndGamma(BODY *body, SYSTEM *system, int iBody) {
+  // Frequency of nodal precession
+  double dGamma;
+  int jBody;
+  int *iaBody;
+
+  iaBody = malloc(2*sizeof(int));
+  if (iBody == 1)
+    jBody = 2;
+  else if (iBody == 2)
+    jBody = 1;
+  else {
+    fprintf(stderr, "The equilibrium Cassini parameters are defined only for three-body systems.\n");
+    exit(1);
+  }
+  iaBody[0] = iBody;
+  iaBody[1] = jBody;
+
+  dGamma = (body[iaBody[0]].dPinc * fndDistOrbRD4DqDt(body, system, iaBody) -
+            body[iaBody[0]].dQinc * fndDistOrbRD4DpDt(body, system, iaBody)) /
+           (body[iaBody[0]].dPinc * body[iaBody[0]].dPinc +
+            body[iaBody[0]].dQinc * body[iaBody[0]].dQinc);
+  free(iaBody);
+  return dGamma;
+}
+
+double fndDgammaDt(BODY *body, CONTROL *control, SYSTEM *system, int iBody,
+                   double dGammaPrev) {
+  // Time derivative of nodal precession frequency: d(gamma)/dt
+  double dDgammaDt;
+  dDgammaDt = (fndGamma(body, system, iBody) - dGammaPrev) /
+               control->Evolve.dTimeStep;
+  return dDgammaDt;
+}
+
+double fndEqCassOne(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
+  // Eq. 6 in Hamilton & Ward 2004, assuming constant alpha
+  double dGamma, dGammaPrev, dDgammaDt, dEqCassOne;
+  dGamma = fndGamma(body, system, iBody);
+  if (control->Evolve.dTime == 0.)
+    dGammaPrev = dGamma;
+  dDgammaDt = fndDgammaDt(body, control, system, iBody, dGammaPrev);
+  dGammaPrev = dGamma;
+  dEqCassOne = dDgammaDt / (fndCentralTorqueR(body, iBody) * dGamma *
+               tan(body[iBody].dObliquity) * tan(body[iBody].dInc));
+  return dEqCassOne;
+}
+
+/* END DANGER ZONE */

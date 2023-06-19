@@ -45,6 +45,8 @@
 #define OUT_DYNELLIP 1450
 #define OUT_PRECFNAT 1451
 
+#define OUT_EQCASS1 1432
+
 /* @cond DOXYGEN_OVERRIDE */
 
 void AddModuleDistRot(CONTROL *, MODULE *, int, int);
@@ -103,6 +105,9 @@ void WriteYoblTimeDistRot(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
 void WriteZoblTimeDistRot(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                           UPDATE *, int, double *, char[]);
 
+void WriteEqCassOne(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                    UPDATE *, int, double *, char[]);
+
 void InitializeOutputDistRot(OUTPUT *, fnWriteOutput[]);
 
 /* Logging Functions */
@@ -134,5 +139,9 @@ double fndDistRotLL2DzDt(BODY *, SYSTEM *, int *);
 double fndDistRotExtDxDt(BODY *, SYSTEM *, int *);
 double fndDistRotExtDyDt(BODY *, SYSTEM *, int *);
 double fndDistRotExtDzDt(BODY *, SYSTEM *, int *);
+
+double fndGamma(BODY *, SYSTEM *, int);
+double fndDGammaDt(BODY *, CONTROL *, SYSTEM *, int, double);
+double fndEqCassOne(BODY *, CONTROL *, SYSTEM *, int);
 
 /* @endcond */
