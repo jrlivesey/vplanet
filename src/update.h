@@ -104,6 +104,10 @@
 #define VCO2MASSMOATM 2311
 #define VCO2MASSSOL 2312
 
+// DAISY
+#define VBLACKAREA 2401
+#define VWHITEAREA 2402
+
 void InitializeUpdateBodyPerts(CONTROL *, UPDATE *, int);
 void InitializeUpdateTmpBody(BODY *, CONTROL *, MODULE *, UPDATE *, int);
 void UpdateCopy(UPDATE *, UPDATE *, int);

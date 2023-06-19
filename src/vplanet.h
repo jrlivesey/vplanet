@@ -1009,6 +1009,19 @@ struct BODY {
   double dWaterMassEsc;  /**< Water mass escaped per time */
   double dOxygenMassEsc; /**< Oxygen mass escaped per time */
   double dHZInnerEdge;   /**< Inner edge of habitable zone (runaway) */
+
+  /* DAISY variables */
+  int iDaisy;   /**< Use daisy module? */
+  double dBlackArea;   /**< Normalized area covered by "black" daisies */
+  double dWhiteArea;   /**< Normalized area covered by "black" daisies */
+  double dHabitArea;   /**< Normalized area habitable to daisies */
+  double dEmptyAlbedo;
+  double dBlackAlbedo;
+  double dWhiteAlbedo;
+  double dBlackBirthParam;
+  double dWhiteBirthParam;
+  double dDeathParam;
+  double dMaxTemp;
 };
 
 /* SYSTEM contains properties of the system that pertain to
@@ -1631,6 +1644,16 @@ struct UPDATE {
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
      semi-major axis derivatives due to EQTIDE+STELLAR. */
   double *pdDsemiDtEqSt;
+
+  /* DAISY */
+  int iBlackArea;
+  int iNumBlackArea;
+  int iWhiteArea;
+  int iNumWhiteArea;
+  double dDBlackAreaDt;
+  double dDWhiteAreaDt;
+  double *pdDBlackAreaDt;
+  double *pdDWhiteAreaDt;
 };
 
 struct HALT {
@@ -2162,6 +2185,12 @@ typedef void (*fnFinalizeUpdateCO2MassMOAtmModule)(BODY *, UPDATE *, int *, int,
 typedef void (*fnFinalizeUpdateCO2MassSolModule)(BODY *, UPDATE *, int *, int,
                                                  int, int);
 
+/* daisy functions */
+typedef void (*fnFinalizeUpdateBlackAreaModule)(BODY *, UPDATE *, int *, int,
+                                                int, int);
+typedef void (*fnFinalizeUpdateWhiteAreaModule)(BODY *, UPDATE *, int *, int,
+                                                int, int);
+
 typedef void (*fnReadOptionsModule)(BODY *, CONTROL *, FILES *, OPTIONS *,
                                     SYSTEM *, fnReadOption *, int);
 typedef void (*fnVerifyModule)(BODY *, CONTROL *, FILES *, OPTIONS *, OUTPUT *,
@@ -2355,6 +2384,10 @@ struct MODULE {
   fnFinalizeUpdateCO2MassMOAtmModule **fnFinalizeUpdateCO2MassMOAtm;
   fnFinalizeUpdateCO2MassSolModule **fnFinalizeUpdateCO2MassSol;
 
+  /* daisy functions */
+  fnFinalizeUpdateBlackAreaModule **fnFinalizeUpdateBlackArea;
+  fnFinalizeUpdateWhiteAreaModule **fnFinalizeUpdateWhiteArea;
+
   /*! These functions log module-specific data. */
   fnLogBodyModule **fnLogBody;
 
@@ -2396,6 +2429,7 @@ typedef void (*fnIntegrate)(BODY *, CONTROL *, SYSTEM *, UPDATE *,
 /* module files */
 #include "atmesc.h"
 #include "binary.h"
+#include "daisy.h"
 #include "distorb.h"
 #include "distrot.h"
 #include "eqtide.h"
