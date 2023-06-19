@@ -12,44 +12,44 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/CircumbinaryOrbit
-   examples/VenusWaterLoss
-   examples/MiniNeptuneEvap
-   examples/RadHeat
-   examples/AtmEscFlareProxCen
-   examples/MagmOc_Trappist1g
-   examples/ApseLock
-   examples/MagmOc_Earth
-   examples/VenusApproxInterior
-   examples/SS_NBody
-   examples/StellarEvol
-   examples/FfdProxCen
    examples/ChaoticResonances
-   examples/MagmOc_GJ1132b
-   examples/STEEP
-   examples/CassiniMulti
-   examples/MDwarfLuminosity
-   examples/AtmEscKepler-36
-   examples/HLossTides
-   examples/NBodyAtmEsc
-   examples/CassiniStates
-   examples/GalaxyEffects
-   examples/AtmEscRegimes
-   examples/EarthClimate
-   examples/DampedCBP
-   examples/SSDistOrbDistRot
-   examples/BinaryTides
-   examples/AbioticO2
-   examples/IceBelts
-   examples/TideLock
-   examples/MagneticBraking
-   examples/IoHeat
-   examples/HabEvapCore
-   examples/EarthInterior
-   examples/ParameterSweep
    examples/TidalEarth
+   examples/FfdProxCen
+   examples/ParameterSweep
+   examples/DampedCBP
+   examples/MDwarfLuminosity
    examples/WaterLossTides
+   examples/IceBelts
+   examples/ApseLock
+   examples/NBodyAtmEsc
+   examples/TideLock
+   examples/BinaryTides
+   examples/VenusApproxInterior
+   examples/VenusWaterLoss
+   examples/AtmEscRegimes
+   examples/AtmEscFlareProxCen
+   examples/EarthInterior
+   examples/RadHeat
+   examples/GalaxyEffects
+   examples/SSDistOrbDistRot
+   examples/IoHeat
+   examples/CircumbinaryOrbit
    examples/HabitableZone
+   examples/AtmEscKepler-36
+   examples/EarthClimate
+   examples/HabEvapCore
+   examples/MiniNeptuneEvap
+   examples/MagmOc_Earth
+   examples/STEEP
+   examples/CassiniStates
+   examples/MagneticBraking
+   examples/MagmOc_Trappist1g
+   examples/AbioticO2
+   examples/CassiniMulti
+   examples/MagmOc_GJ1132b
+   examples/SS_NBody
+   examples/HLossTides
+   examples/StellarEvol
 
 
 Broken
