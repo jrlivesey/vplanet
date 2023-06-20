@@ -41,7 +41,7 @@ void ReadBlackAlbedo() {
 void ReadWhiteAlbedo() {
 }
 
-void ReadBarrenAlbedo() {
+void ReadEmptyAlbedo() {
 }
 
 void ReadHabitArea() {
@@ -72,10 +72,10 @@ void InitializeOutputDaisy() {
 /* FUNCTIONS FOR CALCULATION */
 double fndDBlackAreaDt(BODY *body, SYSTEM *system, int *iaBody) {
     // Total derivative of the normalized area covered by "black" daisies.
-    double dBarrenArea, dDBlackAreaDt;
-    dBarrenArea = body[iaBody[0]].dHabitArea - body[iaBody[0]].dBlackArea -
+    double dEmptyArea, dDBlackAreaDt;
+    dEmptyArea = body[iaBody[0]].dHabitArea - body[iaBody[0]].dBlackArea -
                   body[iaBody[0]].dWhiteArea;
-    dDBlackAreaDt = body[iaBody[0]].dBlackArea * (dBarrenArea *
+    dDBlackAreaDt = body[iaBody[0]].dBlackArea * (dEmptyArea *
                     body[iaBody[0]].dBlackBirthParam -
                     body[iaBody[0]].dDeathParam);
     return dDBlackAreaDt;
@@ -83,33 +83,70 @@ double fndDBlackAreaDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fndDWhiteAreaDt(BODY *body, SYSTEM *system, int *iaBody) {
     // Total derivative of the normalized area covered by "white" daisies.
-    double dBarrenArea, dDWhiteAreaDt;
-    dBarrenArea = body[iaBody[0]].dHabitArea - body[iaBody[0]].dBlackArea -
+    double dEmptyArea, dDWhiteAreaDt;
+    dEmptyArea = body[iaBody[0]].dHabitArea - body[iaBody[0]].dBlackArea -
                   body[iaBody[0]].dWhiteArea;
-    dDWhiteAreaDt = body[iaBody[0]].dWhiteArea * (dBarrenArea *
+    dDWhiteAreaDt = body[iaBody[0]].dWhiteArea * (dEmptyArea *
                     body[iaBody[0]].dWhiteBirthParam -
                     body[iaBody[0]].dDeathParam);
     return dDBlackAreaDt;
 }
 
+double fndEmptyArea(BODY *body, SYSTEM *system, int *iaBody) {
+    double dEmptyArea;
+    dEmptyArea = body[iaBody[0]].dHabitArea - body[iaBody[0]].dBlackArea -
+                 body[iaBody[0]].dWhiteArea;
+    return dEmptyArea;
+}
+
 double fndSurfAlbedo(BODY *body, SYSTEM *system, int *iaBody) {
     // Average albedo of the planet's surface.
-
+    double dSurfAlbedo;
+    dSurfAlbedo = body[iaBody[0]].dEmptyAlbedo * fndEmptyArea(body, system, iaBody) +
+                  body[iaBody[0]].dBlackAlbedo * body[iaBody[0]].dBlackArea +
+                  body[iaBody[0]].dWhiteAlbedo * body[iaBody[0]].dWhiteArea;
+    return dSurfAlbedo;
 }
 
 double fndSurfTemp(BODY *body, SYSTEM *system, int *iaBody) {
     // Average temperature at the planet's surface.
     // Set dSurfEnFlux = the SurfEnFluxTotal output ?
-    double dSurfEnFlux, dBarrenArea, dSurfAlbedo, dSurfTemp;
-    dBarrenArea = body[iaBody[0]].dHabitArea - body[iaBody[0]].dBlackArea -
-                  body[iaBody[0]].dWhiteArea;
-    dSurfAlbedo = body[iaBody[0]].dBarrenAlbedo * dBarrenArea +
-                  body[iaBody[0]].dBlackAlbedo * body[iaBody[0]].dBlackArea +
-                  body[iaBody[0]].dWhiteAlbedo * body[iaBody[0]].dWhiteArea;
-    dSurfTemp = pow(dSurfEnFlux * (1. - dSurfAlbedo) / SIGMA, 0.25);
+    double dSurfEnFlux, dSurfTemp;
+    dSurfTemp = pow(dSurfEnFlux * (1. - fndSurfAlbedo(body, system, iaBody)) /
+                SIGMA, 0.25);
     return dSurfTemp;
 }
 
+double fndBlackTemp(BODY *body, SYSTEM *system, int *iaBody) {
+    // Local temperature of the "black" daisies.
+    double q, dBlackTemp;
+    dBlackTemp = pow(q * (fndSurfAlbedo(body, system, iaBody) -
+                      body[iaBody[0]].dBlackAlbedo) *
+                     pow(fndSurfTemp(body, system, iaBody), 4), 0.25);
+    return dBlackTemp;
+}
+
+double fndWhiteTemp(BODY *body, SYSTEM *system, int *iaBody) {
+    // Local temperature of the "white" daisies.
+    double q, dWhiteTemp;
+    dWhiteTemp = pow(q * (fndSurfAlbedo(body, system, iaBody) -
+                      body[iaBody[0]].dWhiteAlbedo) *
+                     pow(fndSurfTemp(body, system, iaBody), 4), 0.25);
+    return dWhiteTemp;
+}
+
 double fndBlackBirthParam(BODY *body, SYSTEM *system, int *iaBody) {
-    
+    // Birthrate parameter for the "black" daisies.
+    double dBlackBirthParam;
+    dBlackBirthParam = 1. - 0.003265 * (body[iaBody[0]].dMaxTemp -
+                                        body[iaBody[0]].dBlackTemp);
+    return dBlackBirthParam;
+}
+
+double fndWhiteBirthParam(BODY *body, SYSTEM *system, int *iaBody) {
+    // Birthrate parameter for the "white" daisies.
+    double dWhiteBirthParam;
+    dWhiteBirthParam = 1. - 0.003265 * (body[iaBody[0]].dMaxTemp -
+                                        body[iaBody[0]].dWhiteTemp);
+    return dWhiteBirthParam;
 }
