@@ -140,8 +140,10 @@ double fndDistRotExtDxDt(BODY *, SYSTEM *, int *);
 double fndDistRotExtDyDt(BODY *, SYSTEM *, int *);
 double fndDistRotExtDzDt(BODY *, SYSTEM *, int *);
 
-double fndGamma(BODY *, SYSTEM *, int);
-double fndDGammaDt(BODY *, CONTROL *, SYSTEM *, int, double);
+double fndAxisPrecFreq(BODY *, SYSTEM *, int);
+double fndNodePrecFreq(BODY *, SYSTEM *, int);
+double fndDAxisPrecFreqDt(BODY *, CONTROL *, SYSTEM *, int, double, double);
+double fndDNodePrecFreqDt(BODY *, CONTROL *, SYSTEM *, int, double, double);
 double fndEqCassOne(BODY *, CONTROL *, SYSTEM *, int);
 
 /* @endcond */

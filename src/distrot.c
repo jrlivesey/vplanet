@@ -2176,14 +2176,16 @@ double fndDistRotExtDzDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /* JOSEPH'S DANGER ZONE */
 
-double fndDalphaDt(BODY *body, SYSTEM *system, int *iaBody) {
-  // Time derivative of axial precession frequency: d(alpha)/dt
-  return 0;
+double fndAxisPrecFreq(BODY *body, SYSTEM *system, int iBody) {
+  // Frequency of axial precession
+  return fndCentralTorqueR(body, iBody);
+  // return fndCentralTorqueR(body, iBody) * cos(body[iBody].dObliquity);
+
 }
 
-double fndGamma(BODY *body, SYSTEM *system, int iBody) {
+double fndNodePrecFreq(BODY *body, SYSTEM *system, int iBody) {
   // Frequency of nodal precession
-  double dGamma;
+  double dNodePrecFreq;
   int jBody;
   int *iaBody;
 
@@ -2193,39 +2195,67 @@ double fndGamma(BODY *body, SYSTEM *system, int iBody) {
   else if (iBody == 2)
     jBody = 1;
   else {
-    fprintf(stderr, "The equilibrium Cassini parameters are defined only for three-body systems.\n");
+    fprintf(stderr, "The equilibrium Cassini parameters are defined only for \
+                     three-body systems.\n");
     exit(1);
   }
   iaBody[0] = iBody;
   iaBody[1] = jBody;
 
-  dGamma = (body[iaBody[0]].dPinc * fndDistOrbRD4DqDt(body, system, iaBody) -
-            body[iaBody[0]].dQinc * fndDistOrbRD4DpDt(body, system, iaBody)) /
-           (body[iaBody[0]].dPinc * body[iaBody[0]].dPinc +
-            body[iaBody[0]].dQinc * body[iaBody[0]].dQinc);
+  dNodePrecFreq = (body[iaBody[0]].dPinc *
+                   fndDistOrbRD4DqDt(body, system, iaBody) -
+                   body[iaBody[0]].dQinc *
+                   fndDistOrbRD4DpDt(body, system, iaBody)) /
+                  (body[iaBody[0]].dPinc * body[iaBody[0]].dPinc +
+                   body[iaBody[0]].dQinc * body[iaBody[0]].dQinc);
   free(iaBody);
-  return dGamma;
+  return dNodePrecFreq;
 }
 
-double fndDgammaDt(BODY *body, CONTROL *control, SYSTEM *system, int iBody,
-                   double dGammaPrev) {
+double fndDAxisPrecFreqDt(BODY *body, CONTROL *control, SYSTEM *system, int iBody,
+                          double dAxisPrecFreqPrev, double dPrevTime) {
+  // Time derivative of axial precession frequency: d(alpha)/dt
+  double dDAxisPrecFreqDt;
+  dDAxisPrecFreqDt = (fndAxisPrecFreq(body, system, iBody) -
+                      dAxisPrecFreqPrev) /
+                     (control->Evolve.dTime - dPrevTime) * YEARSEC;
+  return dDAxisPrecFreqDt;
+}
+
+double fndDNodePrecFreqDt(BODY *body, CONTROL *control, SYSTEM *system, int iBody,
+                   double dNodePrecFreqPrev, double dPrevTime) {
   // Time derivative of nodal precession frequency: d(gamma)/dt
-  double dDgammaDt;
-  dDgammaDt = (fndGamma(body, system, iBody) - dGammaPrev) /
-               control->Evolve.dTimeStep;
-  return dDgammaDt;
+  double dDNodePrecFreqDt;
+  dDNodePrecFreqDt = (fndNodePrecFreq(body, system, iBody) -
+                      dNodePrecFreqPrev) /
+                     (control->Evolve.dTime - dPrevTime) * YEARSEC;
+  return dDNodePrecFreqDt;
 }
 
 double fndEqCassOne(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
   // Eq. 6 in Hamilton & Ward 2004, assuming constant alpha
-  double dGamma, dGammaPrev, dDgammaDt, dEqCassOne;
-  dGamma = fndGamma(body, system, iBody);
-  if (control->Evolve.dTime == 0.)
-    dGammaPrev = dGamma;
-  dDgammaDt = fndDgammaDt(body, control, system, iBody, dGammaPrev);
-  dGammaPrev = dGamma;
-  dEqCassOne = dDgammaDt / (fndCentralTorqueR(body, iBody) * dGamma *
-               tan(body[iBody].dObliquity) * tan(body[iBody].dInc));
+  double dAxisPrecFreq, dAxisPrecFreqPrev, dDAxisPrecFreqDt,
+         dNodePrecFreq, dNodePrecFreqPrev, dDNodePrecFreqDt,
+         dPrevTime, dEqCassOne;
+  dAxisPrecFreq = fndAxisPrecFreq(body, system, iBody);
+  dNodePrecFreq = fndNodePrecFreq(body, system, iBody);
+  if (control->Evolve.dTime == 0.) {
+    dAxisPrecFreqPrev = dAxisPrecFreq;
+    dNodePrecFreqPrev = dNodePrecFreq;
+    dPrevTime = 0.;
+  }
+  dDAxisPrecFreqDt = fndDAxisPrecFreqDt(body, control, system, iBody,
+                                        dAxisPrecFreqPrev, dPrevTime);
+  dDNodePrecFreqDt = fndDNodePrecFreqDt(body, control, system, iBody,
+                                        dNodePrecFreqPrev, dPrevTime);
+  dAxisPrecFreqPrev = fndAxisPrecFreq(body, system, iBody);
+  dNodePrecFreqPrev = dNodePrecFreq;
+  dPrevTime = control->Evolve.dTime;
+  // fprintf(stderr, "%f\n", dPrevTime);
+  dEqCassOne = (dDAxisPrecFreqDt * cos(body[iBody].dObliquity) +
+                dDNodePrecFreqDt * cos(body[iBody].dInc)) /
+               (dAxisPrecFreq * dNodePrecFreq *
+                sin(body[iBody].dObliquity) * sin(body[iBody].dInc));
   return dEqCassOne;
 }
 
