@@ -44,8 +44,8 @@
     <link rel="top" title="VPLanet 2.3.46
  documentation" href="../index.html"/>
         <link rel="up" title="C API" href="../src.html"/>
-        <link rel="next" title="galhabit" href="galhabit.html"/>
-        <link rel="prev" title="poise" href="poise.html"/> 
+        <link rel="next" title="distorb" href="distorb.html"/>
+        <link rel="prev" title="options" href="options.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -102,34 +102,34 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
 <li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">distrot</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#distrot-c">distrot.c</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#distrot-h">distrot.h</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -877,18 +877,23 @@
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv411fndDalphaDtP4BODYP6SYSTEMPi">
-<span id="_CPPv311fndDalphaDtP4BODYP6SYSTEMPi"></span><span id="_CPPv211fndDalphaDtP4BODYP6SYSTEMPi"></span><span id="fndDalphaDt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1a8056f4cda5ac6906142d57f4424fc6dc"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndDalphaDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fndDalphaDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv415fndAxisPrecFreqP4BODYP6SYSTEMi">
+<span id="_CPPv315fndAxisPrecFreqP4BODYP6SYSTEMi"></span><span id="_CPPv215fndAxisPrecFreqP4BODYP6SYSTEMi"></span><span id="fndAxisPrecFreq__BODYP.SYSTEMP.i"></span><span class="target" id="distrot_8c_1a472ddb2781a4968409db086d2ef464e4"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndAxisPrecFreq</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fndAxisPrecFreqP4BODYP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv48fndGammaP4BODYP6SYSTEMi">
-<span id="_CPPv38fndGammaP4BODYP6SYSTEMi"></span><span id="_CPPv28fndGammaP4BODYP6SYSTEMi"></span><span id="fndGamma__BODYP.SYSTEMP.i"></span><span class="target" id="distrot_8c_1aefdb242f27729fa33dbfc1984c15c6ad"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndGamma</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48fndGammaP4BODYP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv415fndNodePrecFreqP4BODYP6SYSTEMi">
+<span id="_CPPv315fndNodePrecFreqP4BODYP6SYSTEMi"></span><span id="_CPPv215fndNodePrecFreqP4BODYP6SYSTEMi"></span><span id="fndNodePrecFreq__BODYP.SYSTEMP.i"></span><span class="target" id="distrot_8c_1a81f08571ae641f7d50d4d22da5909fec"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndNodePrecFreq</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fndNodePrecFreqP4BODYP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv411fndDgammaDtP4BODYP7CONTROLP6SYSTEMid">
-<span id="_CPPv311fndDgammaDtP4BODYP7CONTROLP6SYSTEMid"></span><span id="_CPPv211fndDgammaDtP4BODYP7CONTROLP6SYSTEMid"></span><span id="fndDgammaDt__BODYP.CONTROLP.SYSTEMP.i.double"></span><span class="target" id="distrot_8c_1a1cf83dc540040936d3132165506923f2"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndDgammaDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dGammaPrev</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fndDgammaDtP4BODYP7CONTROLP6SYSTEMid" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv418fndDAxisPrecFreqDtP4BODYP7CONTROLP6SYSTEMidd">
+<span id="_CPPv318fndDAxisPrecFreqDtP4BODYP7CONTROLP6SYSTEMidd"></span><span id="_CPPv218fndDAxisPrecFreqDtP4BODYP7CONTROLP6SYSTEMidd"></span><span id="fndDAxisPrecFreqDt__BODYP.CONTROLP.SYSTEMP.i.double.double"></span><span class="target" id="distrot_8c_1a74f73cf6ab051c6119d7ed7d171ea4ff"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndDAxisPrecFreqDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dAxisPrecFreqPrev</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dPrevTime</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndDAxisPrecFreqDtP4BODYP7CONTROLP6SYSTEMidd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418fndDNodePrecFreqDtP4BODYP7CONTROLP6SYSTEMidd">
+<span id="_CPPv318fndDNodePrecFreqDtP4BODYP7CONTROLP6SYSTEMidd"></span><span id="_CPPv218fndDNodePrecFreqDtP4BODYP7CONTROLP6SYSTEMidd"></span><span id="fndDNodePrecFreqDt__BODYP.CONTROLP.SYSTEMP.i.double.double"></span><span class="target" id="distrot_8c_1aa80b10fe5eaec3b4fbf6063ad2efd3d3"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndDNodePrecFreqDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dNodePrecFreqPrev</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dPrevTime</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndDNodePrecFreqDtP4BODYP7CONTROLP6SYSTEMidd" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
@@ -1046,10 +1051,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="galhabit.html" class="btn btn-neutral float-right" title="galhabit" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="distorb.html" class="btn btn-neutral float-right" title="distorb" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="poise.html" class="btn btn-neutral" title="poise" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="options.html" class="btn btn-neutral" title="options" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
