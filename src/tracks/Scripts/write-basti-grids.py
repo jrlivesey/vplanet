@@ -247,9 +247,11 @@ def write_grid(quantity, data, interp):
     groups = data.groupby('Mwd').groups
     
     if quantity == 'L':
+        print()
         print('\n Luminosity \n')
 
     elif quantity == 'T':
+        print()
         print('\n Effective Temperature \n')
 
     else:
@@ -327,9 +329,14 @@ def linear_interpolate_and_extrapolate(subdir):
     plot_tracks('L', data, basti_age, basti_lum, basti_lum_interp)
     plot_tracks('T', data, basti_age, basti_teff, basti_teff_interp)
 
+    # Lower mass limit depends on the grid
     int_idx = str(marr[0])
     snd_idx = str(marr[1])
     fst_idx = str(marr[2])
+
+    int_mass = marr[0]
+    snd_mass = marr[1]
+    fst_mass = marr[2]
 
     # Extrapolating luminosity just beyond BaSTI grid
     fst = basti_lum_interp['1.0']
@@ -338,7 +345,7 @@ def linear_interpolate_and_extrapolate(subdir):
 
     fst = basti_lum_interp[fst_idx]
     snd = basti_lum_interp[snd_idx]
-    basti_lum_interp[int_idx] = snd + (snd - fst) / (0.54 - 0.61) * (0.53 - 0.54)
+    basti_lum_interp[int_idx] = snd + (snd - fst) / (snd_mass - fst_mass) * (int_mass - snd_mass)
 
     # Extrapolating temperature just beyond BaSTI grid
     fst = basti_teff_interp['1.0']
@@ -347,7 +354,7 @@ def linear_interpolate_and_extrapolate(subdir):
 
     fst = basti_teff_interp[fst_idx]
     snd = basti_teff_interp[snd_idx]
-    basti_teff_interp[int_idx] = snd + (snd - fst) / (0.54 - 0.61) * (0.53 - 0.54)
+    basti_teff_interp[int_idx] = snd + (snd - fst) / (snd_mass - fst_mass) * (int_mass - snd_mass)
 
     # Write each grid in vplanet-readable format
     for _ in range(10): print()
