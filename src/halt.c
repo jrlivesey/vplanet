@@ -258,6 +258,12 @@ void VerifyHalts(BODY *body, CONTROL *control, MODULE *module,
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
     // First calculate how many halts for this body
 
+    /*
+    fprintf(stderr, "\n WEEEEEE \n\n");
+    HALT *halt = &control->Halt[iBody];
+    fprintf(stderr, "\n WEEEEEE \n\n"); exit(0);
+    */
+
     // First get all the simple cases
     control->Halt[iBody].iNumHalts =
           fiNumHalts(&control->Halt[iBody], module, iBody);

@@ -3749,6 +3749,8 @@ static double const daLopezRadius[MASSLEN][COMPLEN][FLUXLEN][METLEN][TIMELEN] =
 // RB: Move the rest of this file to stellar.h.
 
 // Baraffe stellar evolution grid
+void fvMatrixVectorMult(const int [16][16], const double *, double *);
+int fiGetLowerBound(double, const double *, int);
 double fdBaraffe(int, double, double, int, int *);
 
 /* @endcond */

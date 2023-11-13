@@ -51,6 +51,7 @@
 #define SPINBODY 4096
 #define DISTRES 8192
 #define MAGMOC 16384
+#define WDWARF 32768
 
 /* Fundamental constants; Some of these are taken from the IAU working
  group on Fundamental constants, as described in Prsa et al. 2016. */
@@ -1008,6 +1009,13 @@ struct BODY {
   double dWaterMassEsc;  /**< Water mass escaped per time */
   double dOxygenMassEsc; /**< Oxygen mass escaped per time */
   double dHZInnerEdge;   /**< Inner edge of habitable zone (runaway) */
+
+  /* WDWARF variables */
+  int bWdwarf;           /**< Use WD model */
+  int iWDModel;          /**< WD stellar evolution model */
+  int iOpacityModel;     /**< Electron opacity model */
+  int iMetallicityLevel; /**< Integral measure of stellar metallicity */
+  int bHeAtm;            /**< Use helium atmosphere model? */
 };
 
 /* SYSTEM contains properties of the system that pertain to
@@ -1623,6 +1631,10 @@ struct UPDATE {
   int iNumLXUV;
   double *pdDLXUVFlareDt;
 
+  /* WDWARF */
+  double *pdLuminosityWdwarf;
+  double *pdTemperatureWdwarf;
+
   /* EQTIDE + STELLAR */
   int iSemiEqSt; /**< equation number Corresponding to EQ+ST's Change to
                     Semi-major Axis */
@@ -1698,6 +1710,10 @@ struct HALT {
                                system) */
   int bHaltAllPlanetsDesicc; /**< Halt if all planets desiccated (for
                                 multiplanet system) */
+  
+  /* WDWARF */
+  int bHaltEndBastiGrid; /**< Halt if we reached the end of the luminosity
+                              grid? */
 };
 
 /* Units. These can be different for different bodies. If set
@@ -1883,10 +1899,11 @@ depends on the total number of modules available. */
  * BINARY: 2100 - 2200
  * GALHABIT: 2200 - 2300
  * MAGMOC: 2300 - 2400
+ * WDWARF: 2400 - 2500
  */
 // These need to be set to the largest previous limit
-#define MODULEOPTEND 2400
-#define MODULEOUTEND 2400
+#define MODULEOPTEND 2500
+#define MODULEOUTEND 2500
 
 /* The INFILE struct contains all the information
  * regarding the files that read in. */
@@ -2194,6 +2211,7 @@ struct MODULE {
   int *iaGalHabit;
   int *iaSpiNBody;
   int *iaMagmOc;
+  int *iaWdwarf;
   int *iaEqtideStellar;
 
   /*! These functions count the number of applicable halts for each body. */
@@ -2406,3 +2424,4 @@ typedef void (*fnIntegrate)(BODY *, CONTROL *, SYSTEM *, UPDATE *,
 #include "spinbody.h"
 #include "stellar.h"
 #include "thermint.h"
+#include "wdwarf.h"

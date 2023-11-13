@@ -2497,6 +2497,7 @@ void InitializeOutput(FILES *files, OUTPUT *output, fnWriteOutput fnWrite[]) {
   InitializeOutputGalHabit(output, fnWrite);
   InitializeOutputSpiNBody(output, fnWrite);
   InitializeOutputMagmOc(output, fnWrite);
+  InitializeOutputWdwarf(output, fnWrite);
 
   /* Why doesn't that code look like this?
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {

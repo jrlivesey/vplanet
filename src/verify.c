@@ -1185,6 +1185,7 @@ void VerifyOptions(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 
   // Finally, initialize derivative values -- this avoids leaks while logging
   PropertiesAuxiliary(body, control, system, update);
+
   CalculateDerivatives(body, system, update, *fnUpdate,
                        control->Evolve.iNumBodies);
 

@@ -3,8 +3,8 @@ Joseph R. Livesey, 2023
 
 This script reads in the BaSTI stellar evolution tracks and linearly
 interpolates them along the mass and age axes to obtain the rectilinear grid
-used in wd.h. It also extrapolates to make tracks just beyond the grids, so that
-the bicubic interpolations made in wd.c are numerically stable.
+used in wdwarf.h. It also extrapolates to make tracks just beyond the grids, so that
+the bicubic interpolations made in wdwarf.c are numerically stable.
 
 This script is based havily on `Baraffe2015RGInterp.py`, the equivalent tool made
 for the STELLAR module by David Fleming.
@@ -16,6 +16,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import pathlib
+from astropy import (units as u, constants as const)
+from scipy.integrate import quad
 from scipy.interpolate import interp1d
 
 
@@ -41,6 +43,24 @@ class NameFormatError(Exception):
 
     def __str__(self):
         return repr(self.message)
+
+
+
+def blackbody_spectrum(freq, temp):
+    temp *= u.K
+    freq *= u.Hz
+    spec = 2. * const.h * freq ** 3 / (const.c ** 2) \
+            * 1./(np.exp(const.h * freq / (const.k_B * temp)) - 1.)
+    return spec / spec.unit
+
+
+
+def xuv_frac(temp):
+    lbol, _ = quad(lambda v: blackbody_spectrum(v, temp), 0.0, 1.0e+50,
+                   points=[1.0e+13, 2.0e+15])
+    lxuv, _ = quad(lambda v: blackbody_spectrum(v, temp), 2.48e+15, 3.0e+16)
+    fxuv = lxuv / lbol
+    return fxuv
 
 
 
@@ -98,7 +118,7 @@ def define_new_grid(old_grid):
     mlen += 2
 
     # Grid ages in Gyr
-    aarr = np.logspace(6., 10., 500) / 1.e9
+    aarr = np.logspace(6.1, 9.8, 500) / 1.e9
 
 
 
@@ -114,7 +134,7 @@ def get_raw_data(subdir):
     data          = pd.DataFrame()
 
     # Parse file name
-    gridname = str(subdir)
+    gridname = subdir.name
 
     try:
         om = gridname[:3]
@@ -253,6 +273,10 @@ def write_grid(quantity, data, interp):
     elif quantity == 'T':
         print()
         print('\n Effective Temperature \n')
+    
+    elif quantity == 'f':
+        print()
+        print('\n XUV frac \n')
 
     else:
         print('Invalid quantity')
@@ -345,7 +369,8 @@ def linear_interpolate_and_extrapolate(subdir):
 
     fst = basti_lum_interp[fst_idx]
     snd = basti_lum_interp[snd_idx]
-    basti_lum_interp[int_idx] = snd + (snd - fst) / (snd_mass - fst_mass) * (int_mass - snd_mass)
+    basti_lum_interp[int_idx] = snd + (snd - fst) / (snd_mass - fst_mass) \
+                                * (int_mass - snd_mass)
 
     # Extrapolating temperature just beyond BaSTI grid
     fst = basti_teff_interp['1.0']
@@ -354,7 +379,11 @@ def linear_interpolate_and_extrapolate(subdir):
 
     fst = basti_teff_interp[fst_idx]
     snd = basti_teff_interp[snd_idx]
-    basti_teff_interp[int_idx] = snd + (snd - fst) / (snd_mass - fst_mass) * (int_mass - snd_mass)
+    basti_teff_interp[int_idx] = snd + (snd - fst) / (snd_mass - fst_mass) \
+                                * (int_mass - snd_mass)
+    
+    # Calculate XUV fraction from temperature
+    xuv_fracs = xuv_frac(basti_teff_interp)
 
     # Write each grid in vplanet-readable format
     for _ in range(10): print()
@@ -362,14 +391,15 @@ def linear_interpolate_and_extrapolate(subdir):
           Z = {grid.metallicity}')
     write_grid('L', data, basti_lum_interp)
     write_grid('T', data, basti_teff_interp)
+    write_grid('f', data, xuv_fracs)
 
 
 
 def main():
     grids = []
     path = pathlib.Path()
-    data_dir = path / '../Data'
-    for subdir in data_dir.iterdir():
+    grids_path = path / '../Data/basti-grids'
+    for subdir in grids_path.iterdir():
         if subdir.is_dir():
             linear_interpolate_and_extrapolate(subdir)
 

@@ -78,6 +78,7 @@ void InitializeModule(BODY *body, CONTROL *control, MODULE *module) {
   module->iaGalHabit      = malloc(iNumBodies * sizeof(int));
   module->iaSpiNBody      = malloc(iNumBodies * sizeof(int));
   module->iaMagmOc        = malloc(iNumBodies * sizeof(int));
+  module->iaWdwarf        = malloc(iNumBodies * sizeof(int));
   module->iaEqtideStellar = malloc(iNumBodies * sizeof(int));
 
   // Initialize some of the recently malloc'd values in module
@@ -100,6 +101,7 @@ void InitializeModule(BODY *body, CONTROL *control, MODULE *module) {
     module->iaGalHabit[iBody]      = -1;
     module->iaSpiNBody[iBody]      = -1;
     module->iaMagmOc[iBody]        = -1;
+    module->iaWdwarf[iBody]        = -1;
     module->iaEqtideStellar[iBody] = -1;
   }
 
@@ -324,6 +326,9 @@ void FinalizeModule(BODY *body, CONTROL *control, MODULE *module, int iBody) {
     iNumModules++;
   }
   if (body[iBody].bMagmOc) {
+    iNumModules++;
+  }
+  if (body[iBody].bWdwarf) {
     iNumModules++;
   }
   if (body[iBody].bEqtide && body[iBody].bStellar) {
@@ -680,6 +685,11 @@ void AddModules(BODY *body, CONTROL *control, MODULE *module) {
       module->iaMagmOc[iBody]            = iModule;
       module->iaModule[iBody][iModule++] = MAGMOC;
     }
+    if (body[iBody].bWdwarf) {
+      AddModuleWdwarf(control, module, iBody, iModule);
+      module->iaWdwarf[iBody]            = iModule;
+      module->iaModule[iBody][iModule++] = WDWARF;
+    }
     AddModulesMulti(body, control, module, iBody, &iModule);
   }
 }
@@ -759,6 +769,9 @@ void ReadModules(BODY *body, CONTROL *control, FILES *files, MODULE *module,
       } else if (memcmp(sLower(saTmp[iModule]), "magmoc", 6) == 0) {
         body[iFile - 1].bMagmOc = 1;
         module->iBitSum[iFile - 1] += MAGMOC;
+      } else if (memcmp(sLower(saTmp[iModule]), "wdwarf", 6) == 0) {
+        body[iFile - 1].bWdwarf = 1;
+        module->iBitSum[iFile - 1] += WDWARF;
       } else {
         if (control->Io.iVerbose >= VERBERR) {
           fprintf(stderr, "ERROR: Unknown Module %s provided to %s.\n",
@@ -890,6 +903,14 @@ void PrintModuleList(FILE *file, int iBitSum, int bPadString) {
     fprintf(file, "ThermInt");
     nspaces -= strlen("ThermInt");
   }
+  if (iBitSum & WDWARF) {
+    if (space) {
+      fprintf(file, " ");
+    }
+    space++;
+    fprintf(file, "Wdwarf");
+    nspaces -= strlen("Wdwarf");
+  }
   if (bPadString) {
     if (space)
       nspaces -= (space - 1);
@@ -916,6 +937,7 @@ void InitializeBodyModules(BODY **body, int iNumBodies) {
     (*body)[iBody].bThermint = 0;
     (*body)[iBody].bSpiNBody = 0;
     (*body)[iBody].bMagmOc   = 0;
+    (*body)[iBody].bWdwarf   = 0;
   }
 }
 
