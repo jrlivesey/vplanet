@@ -1,0 +1,19 @@
+sName		star		# Body's name
+saModules 	wdwarf  	# Modules
+
+# Physical Parameters
+dMass		    0.90        # Mass, negative -> Earth masses
+dRadius         -1.0        # Radius, negative -> Earth radii
+dAge            6.2e6       # Start evolution 6.2 Myr after start of WD phase
+                            # (at ~beginning of BaSTI track)
+
+# The first body in the saBodyFiles list must be the central mass.
+# This body carries no orbital information => the coordinate system is bodycentric.
+
+# WDWARF Parameters
+sWDModel           basti22
+sOpacityModel      cassisi07
+iMetallicityLevel  4
+bHeAtm             0
+
+saOutputOrder	Time WDLuminosity WDTemperature
