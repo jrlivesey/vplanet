@@ -82,6 +82,8 @@
 #define DEGRAD 0.017453292519444445 // Degrees per radian
 #define TOMASS 1.39e21              // Mass of one terrestrial ocean in kg (TO)
 #define ATOMMASS 1.660538921e-27    // Atomic Mass
+#define OXYMASS 2.6568622736e-26    // Mass of Atomic Oxygen 16*ATOMMASS 
+#define PROTONMASS 1.6726219e-27    // Proton mass kg
 #define SIGMA 5.670367e-8           // Stefan-Boltzmann Constant
 #define RGAS 8.3144598              // gas constant in J K^-1 mol^-1
 #define KBOLTZ 1.38064852e-23       // Boltzmann constant, J/K
@@ -1927,8 +1929,8 @@ struct INFILE {
  * regarding the output files. */
 
 struct OUTFILE {
-  char cOut[NAMELEN];                /**< Output File Name */
-  int iNumCols;                      /**< Number of Columns in Output File */
+  char cOut[2*NAMELEN+10];           /**< Output File Name */
+  int iNumCols;                      /**< Number of Columns in Output File (system.planet+.forward/backward) */
   char caCol[MODULEOUTEND][OPTLEN];  /**< Output Value Name */
   int bNeg[MODULEOUTEND];            /**< Use Negative Option Units? */
   int iNumGrid;                      /**< Number of grid outputs */
@@ -1942,7 +1944,7 @@ struct OUTFILE {
 struct FILES {
   char cExe[LINE];    /**< Name of Executable */
   OUTFILE *Outfile;   /**< Output File Name for Forward Integration */
-  char cLog[NAMELEN]; /**< Log File Name */
+  char cLog[NAMELEN+4]; /**< Log File Name (+4 to allow for ".log" suffix) */
   INFILE *Infile;
   int iNumInputs; /**< Number of Input Files */
 };
