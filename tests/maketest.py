@@ -11,7 +11,7 @@ from vplanet import custom_units
 
 
 def Main(dir, initial=False):
-    skip_list = ["Conflicts", "__pycache__"]
+    skip_list = ["Conflicts", "__pycache__", "Help"]
     initial_list = ["HZSingle", "IoHeat"]
 
     if dir == "all":
@@ -21,7 +21,9 @@ def Main(dir, initial=False):
             reply = str(input(question + " (y/n): ")).lower().strip()
 
             if reply[:1] == "y":
-                dir_list = sorted(next(os.walk("."))[1])
+                top_list = sorted(next(os.walk("."))[1])
+                for top in top_list:
+                    dir_list = sorted(next(os.walk(top))[1])
             elif reply[:1] == "n":
                 print("Files NOT overwritten. Exiting.")
                 exit()
@@ -33,7 +35,6 @@ def Main(dir, initial=False):
         dir_list = [dir]
 
     for dirname in dir_list:
-
         if dirname in skip_list:
             continue
         if dirname in initial_list:
@@ -144,14 +145,12 @@ def GetSNames(bodyfiles):
 
 
 def ProcessLogFile(logfile, data, forward, backward, initial=False):
-
     prop = ""
     body = "system"
     with open(logfile, "r+", errors="ignore") as log:
         content = [line.strip() for line in log.readlines()]
 
     for line in content:
-
         if len(line) == 0:
             continue
 
@@ -173,11 +172,9 @@ def ProcessLogFile(logfile, data, forward, backward, initial=False):
 
         # if the line starts with a '(' that means its a variable we need to grab the units
         if line.startswith("("):
-
             if initial == True and prop == "final":
                 continue
             else:
-
                 fv_param = line[1 : line.find(")")].strip()
 
                 # THIS IS FOR VARIABLES THAT START WITH NUMBERS CURRENTLY BUGGED FIX AT LATER DATE
@@ -259,7 +256,6 @@ def ProcessLogFile(logfile, data, forward, backward, initial=False):
 
 
 def ProcessOutputfile(file, data, body, Output):
-
     header = []
     units = []
     for k, v in Output.items():
@@ -288,9 +284,7 @@ def ProcessOutputfile(file, data, body, Output):
 
 
 def ProcessUnits(data):
-
     for k, v in data.items():
-
         if "Order" in k:
             continue
 
@@ -340,6 +334,9 @@ def ProcessUnits(data):
 
         if units == "m^2/s^3":
             v[0] = "u.m ** 2 / u.sec ** 3"
+
+        if units == "m^-2 s^-1":
+            v[0] = "1 / u.m ** 2 / u.sec"
 
         # regular units
         if units == "TO":
@@ -434,46 +431,30 @@ def ProcessUnits(data):
 
 
 def WriteTest(data, dirname, stellar):
-
     badchars = "- "
     for i in badchars:
         dirname = dirname.replace(i, "")
 
-    test_file = "test_" + dirname + ".py"
-    with open(test_file, "w") as t:
-        t.write("from benchmark import Benchmark, benchmark \n")
-        t.write("import astropy.units as u \n")
-        t.write("import pytest \n")
-        t.write(" \n")
-        t.write("@benchmark( \n")
-        t.write("   { \n")
+    # Tests are two subdirs down
+    dirs = dirname.split("/")
 
-        for k, v in data.items():
-            if "Order" in k or v[1] == "inf":
-                continue
+    test_file = "test_" + dirs[1] + ".py"
+    t = open(test_file, "w")
+    try:
+        with open(test_file, "w") as t:
+            t.write("from benchmark import Benchmark, benchmark \n")
+            t.write("import astropy.units as u \n")
+            t.write("import pytest \n")
+            t.write(" \n")
+            t.write("@benchmark( \n")
+            t.write("   { \n")
 
-            # this means its from a output file
-            if "log" not in k and v[0] != "":
-                t.write(
-                    '       "'
-                    + k
-                    + '": {"value": '
-                    + str(v[1])
-                    + ', "unit": '
-                    + v[0]
-                    + ', "index": -1 }, \n'
-                )
-            if "log" not in k and v[0] == "":
-                t.write(
-                    '       "'
-                    + k
-                    + '": {"value": '
-                    + str(v[1])
-                    + ', "index": [-1] }, \n'
-                )
+            for k, v in data.items():
+                if "Order" in k or v[1] == "inf":
+                    continue
 
-            if "log" in k and v[0] != "":
-                if "final" in k and stellar == True:
+                # this means its from a output file
+                if "log" not in k and v[0] != "":
                     t.write(
                         '       "'
                         + k
@@ -481,50 +462,72 @@ def WriteTest(data, dirname, stellar):
                         + str(v[1])
                         + ', "unit": '
                         + v[0]
-                        + ', "rtol": 1e-4}, \n'
+                        + ', "index": -1 }, \n'
                     )
-                else:
+                if "log" not in k and v[0] == "":
                     t.write(
                         '       "'
                         + k
                         + '": {"value": '
                         + str(v[1])
-                        + ', "unit": '
-                        + v[0]
-                        + "}, \n"
+                        + ', "index": [-1] }, \n'
                     )
-            if "log" in k and v[0] == "":
-                if "final" in k and stellar == True:
-                    t.write(
-                        '       "'
-                        + k
-                        + '": {"value": '
-                        + str(v[1])
-                        + ', "rtol": 1e-4}, \n'
-                    )
-                else:
-                    t.write('       "' + k + '": {"value": ' + str(v[1]) + "}, \n")
 
-        t.write("   } \n")
-        t.write(")\n")
-        t.write("class Test" + dirname + "(Benchmark): \n")
-        t.write("   pass")
-        t.write(" \n")
+                if "log" in k and v[0] != "":
+                    if "final" in k and stellar == True:
+                        t.write(
+                            '       "'
+                            + k
+                            + '": {"value": '
+                            + str(v[1])
+                            + ', "unit": '
+                            + v[0]
+                            + ', "rtol": 1e-4}, \n'
+                        )
+                    else:
+                        t.write(
+                            '       "'
+                            + k
+                            + '": {"value": '
+                            + str(v[1])
+                            + ', "unit": '
+                            + v[0]
+                            + "}, \n"
+                        )
+                if "log" in k and v[0] == "":
+                    if "final" in k and stellar == True:
+                        t.write(
+                            '       "'
+                            + k
+                            + '": {"value": '
+                            + str(v[1])
+                            + ', "rtol": 1e-4}, \n'
+                        )
+                    else:
+                        t.write('       "' + k + '": {"value": ' + str(v[1]) + "}, \n")
 
-    print("Successfuly created new test file: "+dirname+"/"+test_file)
+            t.write("   } \n")
+            t.write(")\n")
+            t.write("class Test_" + dirs[1] + "(Benchmark): \n")
+            t.write("   pass")
+            t.write(" \n")
+    except IOError:
+        print("Unable to create file", test_file)
+        exit(1)
 
+    print("Successfuly created new test file: " + dirname + "/" + test_file)
 
 
 def Arguments():
     parser = argparse.ArgumentParser(
         description="Extract data from Vplanet simulations"
     )
-    parser.add_argument("dir", help="name of directory you want to run")
+    parser.add_argument("dir", help="Name of test directory")
     parser.add_argument(
         "-i",
         "--initial",
         action="store_true",
-        help="grabs initial data instead of final",
+        help="Make test from initial values only",
     )
 
     args = parser.parse_args()

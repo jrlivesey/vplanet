@@ -97,49 +97,6 @@ void ReadFlareFFD(BODY *body,
   } else if (iFile > 0)
     body[iFile - 1].iFlareFFD = FLARE_FFD_DAVENPORT;
 }
-/*
-void ReadFlareSlopeUnits(BODY *body,
-                         CONTROL *control,
-                         FILES *files,
-                         OPTIONS *options,
-                         SYSTEM *system,
-                         int iFile) {
-  /* This parameter cannot exist in primary file */
-/*int lTmp = -1;
-char cTmp[OPTLEN];
-
-AddOptionString(files->Infile[iFile].cIn,
-                options->cName,
-                cTmp,
-                &lTmp,
-                control->Io.iVerbose);
-if (lTmp >= 0) {
-  NotPrimaryInput(iFile,
-                  options->cName,
-                  files->Infile[iFile].cIn,
-                  lTmp,
-                  control->Io.iVerbose);
-  if (!memcmp(sLower(cTmp), "se", 2)) {
-    body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_SEC;
-  } else if (!memcmp(sLower(cTmp), "mi", 2)) {
-    body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_MINUTE;
-  } else if (!memcmp(sLower(cTmp), "ho", 2)) {
-    body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_HOUR;
-  } else if (!memcmp(sLower(cTmp), "da", 2)) {
-    body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_DAY;
-  } else {
-    if (control->Io.iVerbose >= VERBERR)
-      fprintf(stderr,
-              "ERROR: Unknown argument to %s: %s. Options are SEC, MIN, HOUR "
-              "or DAY.\n",
-              options->cName,
-              cTmp);
-    LineExit(files->Infile[iFile].cIn, lTmp);
-  }
-  UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-} else if (iFile > 0)
-  body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_DAY;
-}*/
 
 void ReadFlareBandPass(BODY *body,
                        CONTROL *control,
@@ -617,9 +574,9 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
           /*
           "If UV or GOES is selected, the code will convert \n"
           "the input energy of flares from the UV band \n"
-          "(3000-4300 Å) or GOES band (1-8 Å) to the Kepler band \n"
-          "(4000-9000 Å) to calculate the FFD and the SXR \n"
-          "band (1.24 - 1239.85 Å) to calculate the luminosity.\n"
+          "(3000-4300A) or GOES band (1-8A) to the Kepler band \n"
+          "(4000-9000A) to calculate the FFD and the SXR \n"
+          "band (1.24 - 1239.85A) to calculate the luminosity.\n"
           " If SXR is selected, the code will convert the \n"
           "input energy of flares from the SXR band to the Kepler\n"
           "band to calculate the FFD and will use the same \n"
@@ -631,7 +588,7 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
           "Osten and Wolk (2015) (doi:10.1088/0004-637X/809/1/79).\n"
           "If TESSUV is selected, then the code will convert\n"
           "the input energy of flares using the conversion value\n"
-          "to the band U (2000-2800 Å) to the TESS data from \n"
+          "to the band U (2000-2800A) to the TESS data from \n"
           "Gunther et al 2020 (https://doi.org/10.3847/1538-3881/ab5d3a). \n"
           "If the BOLOMETRIC its selected, the code will convert the input \n"
           "energy of flares using the conversion values are taken \n"
@@ -798,7 +755,7 @@ void VerifyFlare(BODY *body,
   already inputed the XUV luminosity by flares and the flare module doesn't need
   this information anymore*/
   if (body[iBody].iFlareFFD == FLARE_FFD_NONE) {
-    int iCol, bError = 0;
+    int iCol;
     for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQ1].cName,
@@ -808,7 +765,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQ1].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQ2].cName,
@@ -818,7 +774,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQ2].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQ3].cName,
@@ -828,7 +783,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQ3].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQ4].cName,
@@ -838,7 +792,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQ4].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQMIN].cName,
@@ -848,7 +801,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQMIN].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQMID].cName,
@@ -858,7 +810,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQMID].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQMAX].cName,
@@ -868,7 +819,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQMAX].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGY1].cName,
@@ -878,7 +828,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGY1].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGY2].cName,
@@ -888,7 +837,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGY2].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGY3].cName,
@@ -898,7 +846,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGY3].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGY4].cName,
@@ -908,7 +855,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGY4].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGYMIN].cName,
@@ -918,7 +864,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGYMIN].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGYMID].cName,
@@ -928,7 +873,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGYMID].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGYMAX].cName,
@@ -938,7 +882,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGYMAX].cName);
-        bError = 1;
       }
     }
   }
@@ -1018,8 +961,8 @@ void FinalizeUpdateLXUVFlare(BODY *body, UPDATE *update, int *iEqn, int iVar,
 // not need this.
 /*void FinalizeUpdateFlareFreqMax(BODY *body, UPDATE *update, int *iEqn, int
   iVar, int iBody, int iFoo) {
-  /* No primary variables for FLARE yet*/
-/*  update[iBody].iaModule[iVar][*iEqn] = FLARE;
+  // No primary variables for FLARE yet
+  //  update[iBody].iaModule[iVar][*iEqn] = FLARE;
   update[iBody].iNumFlareFreqMax              = (*iEqn)++;
 }
 */
@@ -1743,8 +1686,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
   double dEnergyStep, dEnergyStepXUV, dEnergyBin;
 
 
-  //######################### 1. Choosing how to calculate FFD: slopes(age) or
-  // slopes(constant)?##################################
+  // ######################### 1. Choosing how to calculate FFD: slopes(age) or
+  //  slopes(constant)?##################################
 
   if (body[iBody].iFlareFFD == FLARE_FFD_DAVENPORT) {
     // The coefficient values given here were given by Dr. James Davenport in
@@ -1767,8 +1710,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
   }
   if (body[iBody].iFlareFFD == FLARE_FFD_DAVENPORT ||
       body[iBody].iFlareFFD == FLARE_FFD_LACY) {
-    //################# 2. Calculating the XUV energy (SXR 1.24 - 1239.85
-    //Å)#######################################################
+    // ################# 2. Calculating the XUV energy (SXR 1.24 - 1239.85
+    // Å)#######################################################
 
     dLogEnergyMinXUV = fdBandPassXUV(body, iBody, body[iBody].dFlareMinEnergy);
 
@@ -1780,8 +1723,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     // double daEnergyJOUXUV[iEnergyBin + 1], daLogEnerXUV[iEnergyBin + 1],
     //      daEnergyERGXUV[iEnergyBin + 1];
 
-    //################# 3. Calculating the energy in the Kepler band pass (4000
-    //– 9000 Å) ##############################################
+    // ################# 3. Calculating the energy in the Kepler band pass (4000
+    // – 9000 Å) ##############################################
 
     dLogEnergyMin = fdBandPassKepler(body, iBody, body[iBody].dFlareMinEnergy);
     dLogEnergyMax = fdBandPassKepler(body, iBody, body[iBody].dFlareMaxEnergy);
@@ -1801,8 +1744,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     // double daEnergyERG[iEnergyBin + 1], daEnergyJOU[iEnergyBin + 1],
     //      daLogEner[iEnergyBin + 1], daEnerJOU[iEnergyBin + 1];
 
-    //############################ 4. Filling the energy arrays
-    //########################################################################
+    // ############################ 4. Filling the energy arrays
+    // ########################################################################
 
     for (i = 0; i < iEnergyBin + 1; i++) {
       // XUV energy (energy_joules)
@@ -1821,8 +1764,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     body[iBody].dFlareEnergyMin = body[iBody].daEnerJOU[0];
     body[iBody].dFlareEnergyMid = body[iBody].daEnerJOU[iEnergyBin / 2];
     body[iBody].dFlareEnergyMax = body[iBody].daEnerJOU[iEnergyBin];
-    //############################ 5. Filling the FFD arrays
-    //########################################################################
+    // ############################ 5. Filling the FFD arrays
+    // ########################################################################
 
     // Declaring the Flare Frequency distribution (FFD) arrays of size
     // dEnergyBin
@@ -1841,9 +1784,9 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     body[iBody].dFlareFreqMin = body[iBody].daFFD[0];
     body[iBody].dFlareFreqMid = body[iBody].daFFD[iEnergyBin / 2];
     body[iBody].dFlareFreqMax = body[iBody].daFFD[iEnergyBin];
-    //############################ 6. Calculating the XUV luminosity by flares
-    //########################################################################
-    // double daLXUVFlare[iEnergyBin];
+    // ############################ 6. Calculating the XUV luminosity by flares
+    // ########################################################################
+    //  double daLXUVFlare[iEnergyBin];
 
     // Calculating the luminosity by flares for DAVENPORT or LACY mode
     // if the user select to calculate the luminosity using a FFD model
