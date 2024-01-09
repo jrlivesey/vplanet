@@ -240,7 +240,7 @@ void VerifyTemperatureWdwarf(BODY *body, CONTROL *control, OPTIONS *options,
                              UPDATE *update, double dAge, int iBody) {
 
   if (body[iBody].iWDModel == WDWARF_MODEL_BASTI) {
-    body[iBody].dLuminosity =
+    body[iBody].dTemperature =
           fdTemperatureFunctionBasti(body[iBody].iOpacityModel,
                                      body[iBody].bHeAtm,
                                      body[iBody].iMetallicityLevel,
@@ -270,20 +270,21 @@ void VerifyRadiusWdwarf(BODY *body, CONTROL *control, OPTIONS *options,
   
   if (body[iBody].iWDModel == WDWARF_MODEL_BASTI) {
     if (options[OPT_TEMPERATURE].iLine[iBody+1] < 0) {
-      if (body[iBody].dMass < MSUN) {
-        // If the user did not set the radius, calculate from power law
-        // body[iBody].dRadius = fdRadiusWdwarf(body, iBody);
-        // If the user did not set the radius, set to Earth radius
-        body[iBody].dRadius = REARTH;
-      } else {
-        // In the relativistic regime, there exists no power law
-        if (control->Io.iVerbose >= VERBERR) {
-          printf("ERROR: Must set radius when body %d has mass greater than "
-                 "1 solar mass.\n",
-                 iBody);
-        }
-        exit(1);
-      }
+      body[iBody].dRadius = REARTH;
+      // if (body[iBody].dMass < MSUN) {
+      //   // If the user did not set the radius, calculate from power law
+      //   // body[iBody].dRadius = fdRadiusWdwarf(body, iBody);
+      //   // If the user did not set the radius, set to Earth radius
+      //   body[iBody].dRadius = REARTH;
+      // } else {
+      //   // In the relativistic regime, there exists no power law
+      //   if (control->Io.iVerbose >= VERBERR) {
+      //     printf("ERROR: Must set radius when body %d has mass greater than "
+      //            "1 solar mass.\n",
+      //            iBody);
+      //   }
+      //   exit(1);
+      // }
     }
   }
 }
@@ -539,22 +540,50 @@ void AddModuleWdwarf(CONTROL *control, MODULE *module, int iBody, int iModule) {
 
 /*************** WDWARF Functions ***************/
 
-// double fdRadiusWdwarf(BODY *body, int iBody) {
-//   // No interpolation here; this is simply the mass-radius power law.
-//   // From Chandrasekhar (1939)
-//   double R = 0.716 * pow(MMWE, -5./3.) * pow(body[iBody].dMass, -1./3.);
-//   return R;
+// double fdTrapezoid(BODY *body, int iBody,
+//                    double (*func)(BODY *, int, double), double lo,
+//                    double hi, int n) {
+//     // Numerical integration of an arbitrary function via the trapezoid rule
+//     // on the interval [lo, hi].
+//     double h, res;
+//     int k;
+//     h = (hi - lo) / n;
+//     res = 0.5 * h * (func(body, iBody, lo) + func(body, iBody, hi));
+//     for (k=1; k<n; k++) {
+//         res += h * func(body, iBody, lo + k * h);
+//     }
+//     return res;
+// }
+
+// double fdRomberg(BODY *body, int iBody, double (*func)(BODY *, int, double),
+//                  double lo, double hi) {
+//     // Romberg integration of an arbitrary function on the interval [lo, hi].
+//     double R[JMAX+1][JMAX+1];
+//     double h, res;
+//     int j, k;
+//     int n = 1e2; // Number of steps
+
+//     for (j=0; j<=JMAX; j++) {
+//         h = (hi - lo) / n; // Step size
+//         R[j][0] = fdTrapezoid(body, iBody, func, lo, hi, n);
+//         for (k=1; k<=j; k++) {
+//             R[j][k] = R[j][k-1] + 1.0/(pow(4.0, k) - 1.0) *
+//                       (R[j][k-1] - R[j-1][k-1]);
+//         }
+//         n *= 2; // Increase number of steps
+//     }
+//     return R[JMAX][JMAX];
 // }
 
 // double fdXUVFracWdwarf(BODY *body, int iBody) {
 //   // Returns the fraction of the bolometric luminosity within the XUV regime,
 //   // assuming a perfect blackbody.
-//   double norm, intxuv, res;
-//   double lo;
-//   double hi;
+//   double intxuv, norm, res;
+//   double lo = XUV_LO;
+//   double hi = XUV_HI;
 
-//   norm = fdIntegratePlanckSpectrum(body, iBody, 0.0, INFINITY);
 //   intxuv = fdIntegratePlanckSpectrum(body, iBody, lo, hi);
+//   norm = fdIntegrateTotalPlanckSpectrum(body, iBody);
 //   res = intxuv/norm;
 //   return res;
 // }
@@ -565,6 +594,30 @@ void AddModuleWdwarf(CONTROL *control, MODULE *module, int iBody, int iModule) {
 //   /*
 //     Integration here
 //   */
+// }
+
+// double fdIntegrateTotalPlanckSpectrum(BODY *body, int iBody) {
+//   // Integral of the total Planck spectrum from 0 to +inf.
+//   double dTemp = body[iBody].dTemperature;
+//   /*
+//     Integration here
+//   */
+// }
+
+// double fdPlanckSpectrum(BODY *body, int iBody, double dFreq) {
+//   // Spectral energy density of a blackbody (IN SI UNITS)
+//   double res;
+//   double dTemp = body[iBody].dTemperature;
+//   res = 8.0 * PI * HPLANCK * pow(dFreq, 3) / pow(LIGHTSPEED, 3) 
+//         / (exp(KBOLTZ / HPLANCK * dTemp / dFreq) - 1.0);
+//   return res;
+// }
+
+// double fdRadiusWdwarf(BODY *body, int iBody) {
+//   // No interpolation here; this is simply the mass-radius power law.
+//   // From Chandrasekhar (1939)
+//   double R = 0.716 * pow(MMWE, -5./3.) * pow(body[iBody].dMass, -1./3.);
+//   return R;
 // }
 
 double fdLuminosityWdwarf(BODY *body, SYSTEM *system, int *iaBody) {

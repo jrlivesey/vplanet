@@ -85,6 +85,7 @@
 #define SIGMA 5.670367e-8           // Stefan-Boltzmann Constant
 #define RGAS 8.3144598              // gas constant in J K^-1 mol^-1
 #define KBOLTZ 1.38064852e-23       // Boltzmann constant, J/K
+#define HPLANCK 6.62607015e-34      // Planck constant, J/Hz
 #define ALPHA_STRUCT                                                           \
   0.6 // Structural constant for spherical mass                              \
         //distribution potential energy (E_pot = -ALPHA*BIGG*M^2/R)

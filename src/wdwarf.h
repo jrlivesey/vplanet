@@ -6,9 +6,13 @@
     @date 2023
 */
 
-#define LSUN 3.846e26 // Solar luminosity (W)
-#define TSUN 5778.    // Solar TEff (K)
-#define MMWE 0.5      // Mean molecular weight per electron
+#define JMAX 9          // Number of rows in Romberg array
+
+#define LSUN 3.846e26   // Solar luminosity (W)
+#define TSUN 5778.      // Solar Teff (K)
+#define MMWE 0.5        // Mean molecular weight per electron
+#define XUV_HI 3.00e+16 // Highest XUV frequency (Hz)
+#define XUV_LO 2.48e+15 // Lowest XUV frequency (Hz)
 
 #define WDWARF_MODEL_BASTI 1
 #define WDWARF_MODEL_CONST 3
@@ -82,7 +86,9 @@ void LogBodyWdwarf(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UPDATE *,
 void AddModuleWdwarf(CONTROL *, MODULE *, int, int);
 
 /* WDWARF functions */
-double fdRadiusWdwarf(BODY *, int);
+double fdRomberg(BODY *, int, double (BODY*, int, double), double, double);
+double fdTrapezoid(BODY *, int, double (BODY*, int, double), double, double, int);
+double fdXUVFracWdwarf(BODY *, int);
 double fdLuminosityWdwarf(BODY *, SYSTEM *, int *);
 double fdTemperatureWdwarf(BODY *, SYSTEM *, int *);
 double fdLuminosityFunctionBasti(int, int, int, double, double);
