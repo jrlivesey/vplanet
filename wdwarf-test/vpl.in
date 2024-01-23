@@ -8,7 +8,9 @@ bOverwrite	1			# Allow file overwrites?
 # s=string. An "a" indicates an array and multiple arguments are allowed/expected.
 
 # List of "body files" that contain body-specific parameters
-saBodyFiles	star.in
+# saBodyFiles	star.in
+saBodyFiles	wd01.in wd02.in wd03.in wd04.in wd05.in	wd06.in wd07.in wd08.in $
+		wd09.in wd10.in wd11.in wd12.in wd13.in wd14.in wd15.in wd16.in
 
 # Array options can continue to the next line with a terminating "$". The $ can be 
 # at the end of the string or not. Comments are allowed afterwards.
@@ -37,5 +39,5 @@ bDoBackward	0
 #bVarDt		1		# Use variable timestepping?
 dEta		0.01		# Coefficient for variable timestepping
 #bVarDt		0
-dStopTime	5.0e9   	# Stop time for evolution
+dStopTime	1.0e7   	# Stop time for evolution
 dOutputTime	1.0e5		# Output timesteps (assuming in body files)

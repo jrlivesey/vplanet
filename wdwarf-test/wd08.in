@@ -1,8 +1,8 @@
-sName		star		# Body's name
+sName		wd08		# Body's name
 saModules 	wdwarf  	# Modules
 
 # Physical Parameters
-dMass		    0.55        # Mass, negative -> Earth masses
+dMass		    0.69        # Mass, negative -> Earth masses
 dRadius         -1.0        # Radius, negative -> Earth radii
 dAge            6.2e6       # Start evolution 6.2 Myr after start of WD phase
                             # (at ~beginning of BaSTI track)
