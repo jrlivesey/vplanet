@@ -45,6 +45,7 @@
 #define OUTENDWDWARF 2500
 
 #define OUT_LUMINOSITYWDWARF 2410
+#define OUT_LXUVWDWARF 2411
 #define OUT_TEMPERATUREWDWARF 2412
 
 /* Read functions */
@@ -75,7 +76,9 @@ void FinalizeUpdateTemperatureWdwarf(BODY *, UPDATE *, int *, int, int, int);
 void WriteLuminosityWdwarf(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                      int, double *, char *);
 void WriteTemperatureWdwarf(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char *);
+                     int, double *, char *);
+void WriteLXUVWdwarf(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
+                     int, double *, char *);
 void InitializeOutputWdwarf(OUTPUT *, fnWriteOutput *);
 
 void LogOptionsWdwarf(CONTROL *, FILE *);

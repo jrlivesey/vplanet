@@ -10,6 +10,7 @@
 void BodyCopyWdwarf(BODY *dest, BODY *src, int foo, int iNumBodies, int iBody) {
   dest[iBody].dLuminosity       = src[iBody].dLuminosity;
   dest[iBody].dTemperature      = src[iBody].dTemperature;
+  dest[iBody].dLXUV             = src[iBody].dLXUV;
   dest[iBody].iWDModel          = src[iBody].iWDModel;
   dest[iBody].iOpacityModel     = src[iBody].iOpacityModel;
   dest[iBody].iMetallicityLevel = src[iBody].iMetallicityLevel;
@@ -445,6 +446,20 @@ void WriteTemperatureWdwarf(BODY *body, CONTROL *control, OUTPUT *output,
   fsUnitsTemp(0, cUnit);
 }
 
+void WriteLXUVWdwarf(BODY *body, CONTROL *control, OUTPUT *output,
+               SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+               double *dTmp, char cUnit[]) {
+  *dTmp = body[iBody].dLXUV;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
+    fsUnitsPower(units, cUnit);
+  }
+}
+
 void InitializeOutputWdwarf(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_LUMINOSITYWDWARF].cName, "WDLuminosity");
@@ -461,7 +476,16 @@ void InitializeOutputWdwarf(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TEMPERATUREWDWARF].bNeg       = 0;
   output[OUT_TEMPERATUREWDWARF].iNum       = 1;
   output[OUT_TEMPERATUREWDWARF].iModuleBit = WDWARF;
-  fnWrite[OUT_TEMPERATUREWDWARF]           = &WriteTemperatureWdwarf; 
+  fnWrite[OUT_TEMPERATUREWDWARF]           = &WriteTemperatureWdwarf;
+
+  sprintf(output[OUT_LXUVWDWARF].cName, "WDLXUV");
+  sprintf(output[OUT_LXUVWDWARF].cDescr, "Base X-ray/XUV Luminosity");
+  sprintf(output[OUT_LXUVWDWARF].cNeg, "LSUN");
+  output[OUT_LXUVWDWARF].bNeg       = 1;
+  output[OUT_LXUVWDWARF].dNeg       = 1. / LSUN;
+  output[OUT_LXUVWDWARF].iNum       = 1;
+  output[OUT_LXUVWDWARF].iModuleBit = WDWARF;
+  fnWrite[OUT_LXUVWDWARF]           = &WriteLXUVWdwarf;
 }
 
 /***************** WDWARF Halts *****************/
@@ -540,78 +564,85 @@ void AddModuleWdwarf(CONTROL *control, MODULE *module, int iBody, int iModule) {
 
 /*************** WDWARF Functions ***************/
 
-// double fdTrapezoid(BODY *body, int iBody,
-//                    double (*func)(BODY *, int, double), double lo,
-//                    double hi, int n) {
-//     // Numerical integration of an arbitrary function via the trapezoid rule
-//     // on the interval [lo, hi].
-//     double h, res;
-//     int k;
-//     h = (hi - lo) / n;
-//     res = 0.5 * h * (func(body, iBody, lo) + func(body, iBody, hi));
-//     for (k=1; k<n; k++) {
-//         res += h * func(body, iBody, lo + k * h);
-//     }
-//     return res;
-// }
+double fdTrapezoid(BODY *body, int iBody,
+                   double (*func)(BODY *, int, double), double lo,
+                   double hi, int n) {
+    // Numerical integration of an arbitrary function via the trapezoid rule
+    // on the interval [lo, hi].
+    double h, res;
+    int k;
+    h = (hi - lo) / n;
+    res = 0.5 * h * (func(body, iBody, lo) + func(body, iBody, hi));
+    for (k=1; k<n; k++) {
+        res += h * func(body, iBody, lo + k * h);
+    }
+    return res;
+}
 
-// double fdRomberg(BODY *body, int iBody, double (*func)(BODY *, int, double),
-//                  double lo, double hi) {
-//     // Romberg integration of an arbitrary function on the interval [lo, hi].
-//     double R[JMAX+1][JMAX+1];
-//     double h, res;
-//     int j, k;
-//     int n = 1e2; // Number of steps
+double fdRomberg(BODY *body, int iBody, double (*func)(BODY *, int, double),
+                 double lo, double hi) {
+    // Romberg integration of an arbitrary function on the interval [lo, hi].
+    double R[JMAX+1][JMAX+1];
+    double h, res;
+    int j, k;
+    int n = 1e2; // Number of steps
 
-//     for (j=0; j<=JMAX; j++) {
-//         h = (hi - lo) / n; // Step size
-//         R[j][0] = fdTrapezoid(body, iBody, func, lo, hi, n);
-//         for (k=1; k<=j; k++) {
-//             R[j][k] = R[j][k-1] + 1.0/(pow(4.0, k) - 1.0) *
-//                       (R[j][k-1] - R[j-1][k-1]);
-//         }
-//         n *= 2; // Increase number of steps
-//     }
-//     return R[JMAX][JMAX];
-// }
+    for (j=0; j<=JMAX; j++) {
+        h = (hi - lo) / n; // Step size
+        R[j][0] = fdTrapezoid(body, iBody, func, lo, hi, n);
+        for (k=1; k<=j; k++) {
+            R[j][k] = R[j][k-1] + 1.0/(pow(4.0, k) - 1.0) *
+                      (R[j][k-1] - R[j-1][k-1]);
+        }
+        n *= 2; // Increase number of steps
+    }
+    return R[JMAX][JMAX];
+}
 
-// double fdXUVFracWdwarf(BODY *body, int iBody) {
-//   // Returns the fraction of the bolometric luminosity within the XUV regime,
-//   // assuming a perfect blackbody.
-//   double intxuv, norm, res;
-//   double lo = XUV_LO;
-//   double hi = XUV_HI;
+double fdXUVFracWdwarf(BODY *body, int iBody) {
+  // Returns the fraction of the bolometric luminosity within the XUV regime,
+  // assuming a perfect blackbody.
+  double intxuv, norm, res;
+  double lo = XUV_LO;
+  double hi = XUV_HI;
 
-//   intxuv = fdIntegratePlanckSpectrum(body, iBody, lo, hi);
-//   norm = fdIntegrateTotalPlanckSpectrum(body, iBody);
-//   res = intxuv/norm;
-//   return res;
-// }
+  intxuv = fdIntegratePlanckSpectrum(body, iBody, lo, hi);
+  norm = fdIntegrateTotalPlanckSpectrum(body, iBody);
+  res = intxuv/norm;
+  return res;
+}
 
-// double fdIntegratePlanckSpectrum(BODY *body, int iBody, double lo, double hi) {
-//   // Integral of the Planck spectrum over frequency from lo to hi.
-//   double dTemp = body[iBody].dTemperature;
-//   /*
-//     Integration here
-//   */
-// }
+double fdIntegratePlanckSpectrum(BODY *body, int iBody, double lo, double hi) {
+  // Integral of the Planck spectrum over frequency from lo to hi.
+  double dTemp = body[iBody].dTemperature;
+  /*
+    Integration here
+  */
+}
 
-// double fdIntegrateTotalPlanckSpectrum(BODY *body, int iBody) {
-//   // Integral of the total Planck spectrum from 0 to +inf.
-//   double dTemp = body[iBody].dTemperature;
-//   /*
-//     Integration here
-//   */
-// }
+double fdIntegrateTotalPlanckSpectrum(BODY *body, int iBody) {
+  // Integral of the total Planck spectrum from 0 to +inf.
+  double dTemp = body[iBody].dTemperature;
+  /*
+    Integration here
+  */
+}
 
-// double fdPlanckSpectrum(BODY *body, int iBody, double dFreq) {
-//   // Spectral energy density of a blackbody (IN SI UNITS)
-//   double res;
-//   double dTemp = body[iBody].dTemperature;
-//   res = 8.0 * PI * HPLANCK * pow(dFreq, 3) / pow(LIGHTSPEED, 3) 
-//         / (exp(KBOLTZ / HPLANCK * dTemp / dFreq) - 1.0);
-//   return res;
-// }
+double fdPlanckSpectrum(BODY *body, int iBody, double dFreq) {
+  // Spectral energy density of a blackbody (IN SI UNITS)
+  double res;
+  double dTemp = body[iBody].dTemperature;
+  res = 8.0 * PI * HPLANCK * pow(dFreq, 3) / pow(LIGHTSPEED, 3) 
+        / (exp(KBOLTZ / HPLANCK * dTemp / dFreq) - 1.0);
+  return res;
+}
+
+double fdLXUVWdwarf(BODY *body, SYSTEM *system, int *iaBody) {
+  double xuvfrac, res;
+  xuvfrac = fdXUVFracWdwarf(body, iaBody[0]);
+  res = xuvfrac * body[iaBody[0]].dLuminosity;
+  return res;
+}
 
 // double fdRadiusWdwarf(BODY *body, int iBody) {
 //   // No interpolation here; this is simply the mass-radius power law.
