@@ -1,0 +1,16 @@
+sSystemName     wdtest
+iVerbose        0
+bOverwrite      1
+saBodyFiles     01.in 11.in 05.in 04.in 00.in 10.in 07.in 03.in 13.in 02.in 12.in 06.in 09.in 08.in
+sUnitMass       solar
+sUnitLength     aU
+sUnitTime       YEARS
+sUnitAngle      d
+sUnitTemp       K
+bDoLog          1
+iDigits         6
+dMinValue       1e-10
+bDoForward      1
+dEta            0.01
+dStopTime       1.0e9
+dOutputTime     1.0e6

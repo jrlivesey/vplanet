@@ -16,4 +16,4 @@ sOpacityModel      cassisi07
 iMetallicityLevel  4
 bHeAtm             0
 
-saOutputOrder	Time WDLuminosity WDTemperature
+saOutputOrder	Time -WDLuminosity WDTemperature -WDLXUV

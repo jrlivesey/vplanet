@@ -1,0 +1,15 @@
+sName              wd
+saModules           wdwarf eqtide
+dMass              0.98
+dRadius             -1.0
+dAge                2.0e9
+sWDModel            basti22
+sOpacityModel      blouin20
+iMetallicityLevel  2
+bHeAtm             0
+
+dTidalTau 1.0e-10
+sTideModel t8
+saTidePerts planet
+
+saOutputOrder   Time -WDLuminosity WDTemperature -HZLimRecVenus -HZLimRunaway -HZLimMaxGreenhouse -HZLimEarlyMars

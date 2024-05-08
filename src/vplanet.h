@@ -130,6 +130,45 @@ extern const double dHUGE;
 extern const double dTINY;
 /* Do not change these declarations */
 
+
+
+
+
+// /* Joseph Danger Zone */
+
+// struct BigNumber {
+//   double mantissa;
+//   int exponent;
+// };
+
+// struct BigNumber Double2Big(double num) {
+//   struct BigNumber big;
+//   double mantissa;
+//   int exponent;
+
+//   big.mantissa = frexp(num, &big.exponent);
+//   return big;
+// }
+
+// double Big2Double(struct BigNumber big) {
+//   double num;
+//   num = big.mantissa * pow(10., big.exponent);
+//   return num;
+// }
+
+// struct BigNumber BigNumberPower(struct BigNumber big, int power) {
+//   struct BigNumber res;
+//   res.mantissa = pow(big.mantissa, power);
+//   res.exponent = big.exponent + power;
+//   return res;
+// }
+
+// /* Joseph Danger Zone */
+
+
+
+
+
 // IO limits for files, lines, and names
 #define OPTLEN 48        /* Maximum length of an option */
 #define OPTDESCR 128     /* Number of characters in option description */
@@ -1158,6 +1197,7 @@ struct UPDATE {
                    age, 1 = normal quantity with time derivative, 2 =
                    polar/sinusoidal quantity with time derivative, 3 =
                    sinusoidal quantity with explicit function of age) */
+  // double *daTimeStepScaling;
   double *daDeriv;      /**< Array of Total Derivative Values for each Primary
                            Variable */
   double **daDerivProc; /**< Array of Derivative Values Due to a Process */
@@ -1637,6 +1677,7 @@ struct UPDATE {
   /* WDWARF */
   double *pdLuminosityWdwarf;
   double *pdTemperatureWdwarf;
+  double *pdLXUVWdwarf;
 
   /* EQTIDE + STELLAR */
   int iSemiEqSt; /**< equation number Corresponding to EQ+ST's Change to

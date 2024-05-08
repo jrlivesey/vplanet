@@ -1,0 +1,16 @@
+sSystemName     wdhz
+iVerbose        0
+bOverwrite      1
+saBodyFiles     wd.in
+sUnitMass       solar
+sUnitLength     aU
+sUnitTime       YEARS
+sUnitAngle      d
+sUnitTemp       K
+bDoLog          1
+iDigits         6
+dMinValue       1e-10
+bDoForward      1
+dEta            0.01
+dStopTime       2.0e6
+dOutputTime     1.0e6

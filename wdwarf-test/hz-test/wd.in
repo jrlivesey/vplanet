@@ -1,0 +1,10 @@
+sName              wd
+saModules           wdwarf
+dMass              0.6
+dRadius             -1.0
+dAge                1.0e9
+sWDModel            basti22
+sOpacityModel      blouin20
+iMetallicityLevel  2
+bHeAtm             0
+saOutputOrder   Time -WDLuminosity WDTemperature -HZLimRecVenus -HZLimRunaway -HZLimMaxGreenhouse -HZLimEarlyMars

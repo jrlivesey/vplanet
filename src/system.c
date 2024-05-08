@@ -1030,7 +1030,7 @@ double fdLuminosityTotal(BODY *body, int iNumBodies) {
   double dLumTot = 0;
 
   for (iBody = 0; iBody < iNumBodies; iBody++) {
-    if (body[iBody].bStellar) {
+    if (body[iBody].bStellar || body[iBody].bWdwarf) {
       dLumTot += body[iBody].dLuminosity;
     }
   }

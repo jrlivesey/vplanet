@@ -1,0 +1,10 @@
+sName              wd
+saModules           wdwarf
+dMass              0.55
+dRadius             -1.0
+dAge                6.2e6
+sWDModel            basti22
+sOpacityModel      cassisi07
+iMetallicityLevel  0
+bHeAtm             0
+saOutputOrder   Time -WDLuminosity WDTemperature -WDLXUV

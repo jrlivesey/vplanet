@@ -473,6 +473,7 @@ void BodyCopy(BODY *dest, BODY *src, EVOLVE *evolve) {
     dest[iBody].bThermint = src[iBody].bThermint;
     dest[iBody].bRadheat  = src[iBody].bRadheat;
     dest[iBody].bSpiNBody = src[iBody].bSpiNBody;
+    dest[iBody].bWdwarf   = src[iBody].bWdwarf;
 
     dest[iBody].bMantle = src[iBody].bMantle;
     dest[iBody].bOcean  = src[iBody].bOcean;

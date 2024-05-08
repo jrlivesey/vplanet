@@ -1128,7 +1128,7 @@ int fiTideFile(int *iLine, int iNumFiles) {
 
 void InitializeXoblEqtide(BODY *body, UPDATE *update, int iBody, int iPert) {
   update[iBody].iaType[update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]] =
-        2;
+        -2;
   update[iBody].padDXoblDtEqtide[iPert] =
         &update[iBody].daDerivProc[update[iBody].iXobl]
                                   [update[iBody].iaXoblEqtide[iPert]];
@@ -1148,7 +1148,7 @@ void InitializeXoblEqtide(BODY *body, UPDATE *update, int iBody, int iPert) {
 
 void InitializeYoblEqtide(BODY *body, UPDATE *update, int iBody, int iPert) {
   update[iBody].iaType[update[iBody].iYobl][update[iBody].iaYoblEqtide[iPert]] =
-        2;
+        -2;
   update[iBody].padDYoblDtEqtide[iPert] =
         &update[iBody].daDerivProc[update[iBody].iYobl]
                                   [update[iBody].iaYoblEqtide[iPert]];
@@ -1168,7 +1168,7 @@ void InitializeYoblEqtide(BODY *body, UPDATE *update, int iBody, int iPert) {
 
 void InitializeZoblEqtide(BODY *body, UPDATE *update, int iBody, int iPert) {
   update[iBody].iaType[update[iBody].iZobl][update[iBody].iaZoblEqtide[iPert]] =
-        2;
+        -2;
   update[iBody].padDZoblDtEqtide[iPert] =
         &update[iBody].daDerivProc[update[iBody].iZobl]
                                   [update[iBody].iaZoblEqtide[iPert]];
@@ -1188,7 +1188,7 @@ void InitializeZoblEqtide(BODY *body, UPDATE *update, int iBody, int iPert) {
 
 void InitializeRotEqtide(BODY *body, UPDATE *update, int iBody, int iPert) {
   update[iBody].iaType[update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] =
-        1;
+        -1;
   update[iBody].padDrotDtEqtide[iPert] =
         &update[iBody].daDerivProc[update[iBody].iRot]
                                   [update[iBody].iaRotEqtide[iPert]];
@@ -1208,7 +1208,7 @@ void InitializeRotEqtide(BODY *body, UPDATE *update, int iBody, int iPert) {
 }
 
 void InitializeHeccEqtide(BODY *body, UPDATE *update, int iBody) {
-  update[iBody].iaType[update[iBody].iHecc][update[iBody].iHeccEqtide] = 2;
+  update[iBody].iaType[update[iBody].iHecc][update[iBody].iHeccEqtide] = -2;
   update[iBody].pdDHeccDtEqtide =
         &update[iBody]
                .daDerivProc[update[iBody].iHecc][update[iBody].iHeccEqtide];
@@ -1225,7 +1225,7 @@ void InitializeHeccEqtide(BODY *body, UPDATE *update, int iBody) {
 }
 
 void InitializeKeccEqtide(BODY *body, UPDATE *update, int iBody) {
-  update[iBody].iaType[update[iBody].iKecc][update[iBody].iKeccEqtide] = 2;
+  update[iBody].iaType[update[iBody].iKecc][update[iBody].iKeccEqtide] = -2;
   update[iBody].pdDKeccDtEqtide =
         &update[iBody]
                .daDerivProc[update[iBody].iKecc][update[iBody].iKeccEqtide];
@@ -1242,7 +1242,7 @@ void InitializeKeccEqtide(BODY *body, UPDATE *update, int iBody) {
 }
 
 void InitializeSemiEqtide(BODY *body, UPDATE *update, int iBody) {
-  update[iBody].iaType[update[iBody].iSemi][update[iBody].iSemiEqtide] = 1;
+  update[iBody].iaType[update[iBody].iSemi][update[iBody].iSemiEqtide] = -1;
   update[iBody].pdDsemiDtEqtide =
         &update[iBody]
                .daDerivProc[update[iBody].iSemi][update[iBody].iSemiEqtide];
@@ -4337,7 +4337,11 @@ double fdCPLDZoblDt(BODY *body, SYSTEM *system, int *iaBody) {
  */
 
 double fdCTLBeta(double dEcc) {
-  return pow(1 - dEcc * dEcc, 0.5);
+  double dPowEcc, dDiff, dBeta;
+  dPowEcc = 1. / (dEcc * dEcc);
+  dDiff = (dPowEcc - 1.) / dPowEcc;
+  dBeta = pow(dDiff, 0.5);
+  return dBeta;
 }
 
 double fdCTLF1(double dEcc) {
@@ -4385,17 +4389,17 @@ double fdCTLTidePower(BODY *body, int iBody) {
     iIndex = body[iBody].iaTidePerts[iPert];
 
     dPower += (body[iBody].dTidalF[iIndex][0] /
-                     pow(body[iBody].dTidalBeta[iIndex], 15) -
+                     pow(body[iBody].dTidalBeta[iIndex], 15) * pow(1., 15) -
                2 * body[iBody].dTidalF[iIndex][1] *
                      cos(body[iBody].dObliquity) * body[iBody].dRotRate /
                      (pow(body[iBody].dTidalBeta[iIndex], 12) *
-                      body[iOrbiter].dMeanMotion));
+                      body[iOrbiter].dMeanMotion)) * pow(1., 12);
     dPower += ((1 + cos(body[iBody].dObliquity) * cos(body[iBody].dObliquity)) /
                2) *
               body[iBody].dTidalF[iIndex][4] * body[iBody].dRotRate *
               body[iBody].dRotRate /
               (pow(body[iBody].dTidalBeta[iIndex], 9) *
-               body[iOrbiter].dMeanMotion * body[iOrbiter].dMeanMotion);
+               body[iOrbiter].dMeanMotion * body[iOrbiter].dMeanMotion) * pow(1., 9);
     dPower *= body[iBody].dTidalZ[iIndex];
   }
 
@@ -4408,7 +4412,7 @@ double fdCTLTidePower(BODY *body, int iBody) {
 
 double fdCTLTidePowerEq(BODY body, double dEcc) {
 
-  return body.dTidalZ[0] / pow(body.dTidalBeta[0], 15) *
+  return body.dTidalZ[0] / pow(body.dTidalBeta[0], 15) * pow(1., 15) *
          (body.dTidalF[0][0] -
           body.dTidalF[0][1] * body.dTidalF[0][1] / body.dTidalF[0][4] *
                 (2 * cos(body.dObliquity) * cos(body.dObliquity)) /
@@ -4478,25 +4482,50 @@ double fdCTLDsemiDt(BODY *body, SYSTEM *system, int *iaBody) {
    * orbiter, iaBody[1] = central body */
   double dSum = 0;
 
+  // fprintf(stderr, "%f\n", body[iaBody[0]].dTidalBeta[iaBody[1]]);
+  // Cast beta as a BigNumber for these operations, in case e ~ 1
+  // struct BigNumber bnBeta = Double2Big(body[iaBody[0]].dTidalBeta[iaBody[1]]);
+
   // Contribution from orbiter
   dSum += body[iaBody[0]].dTidalZ[iaBody[1]] *
           (cos(body[iaBody[0]].dObliquity) *
                  body[iaBody[0]].dTidalF[iaBody[1]][1] *
                  body[iaBody[0]].dRotRate /
-                 (pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 12) *
-                  body[iaBody[0]].dMeanMotion) -
+                 (pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 3) *
+                  body[iaBody[0]].dMeanMotion) * pow(1., 12) -
            body[iaBody[0]].dTidalF[iaBody[1]][0] /
-                 pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 15));
+                 pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 6) * pow(1., 15));
+  
+  // fprintf(stderr, "eqtide: %d\n", iaBody[1]);
+  // fprintf(stderr, "eqtide: %f\n", body[iaBody[0]].dTidalBeta[iaBody[1]]);
+  // fprintf(stderr, "%f\n", 1./pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 15));
+  // fprintf(stderr, "%f\n\n", (1./pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 15)) * pow(1., 15));
+  // fprintf(stderr, "%f\n\n", dSum);
 
   // Contribution from central body
   dSum += body[iaBody[1]].dTidalZ[iaBody[0]] *
           (cos(body[iaBody[1]].dObliquity) *
                  body[iaBody[0]].dTidalF[iaBody[1]][1] *
                  body[iaBody[1]].dRotRate /
-                 (pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 12) *
-                  body[iaBody[0]].dMeanMotion) -
+                 (pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 3) *
+                  body[iaBody[0]].dMeanMotion) * pow(1., 12) -
            body[iaBody[0]].dTidalF[iaBody[1]][0] /
-                 pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 15));
+                 pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 6) * pow(1., 15));
+
+  // double dTerm2 = body[iaBody[1]].dTidalZ[iaBody[0]] *
+  //         (cos(body[iaBody[1]].dObliquity) *
+  //                body[iaBody[0]].dTidalF[iaBody[1]][1] *
+  //                body[iaBody[1]].dRotRate /
+  //                (pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 3) *
+  //                 body[iaBody[0]].dMeanMotion) * pow(1., 12) -
+  //          body[iaBody[0]].dTidalF[iaBody[1]][0] /
+  //                pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 6) * pow(1., 15));
+  // dSum += dTerm2;
+  
+  // double res = 2 * body[iaBody[0]].dSemi * body[iaBody[0]].dSemi /
+  //        (BIGG * body[iaBody[0]].dMass * body[iaBody[1]].dMass) * dSum;
+  // fprintf(stderr, "%f\n\n", dSum+dTerm2);
+  // fprintf(stderr, "%f\n\n", dTerm2);
 
 
   return 2 * body[iaBody[0]].dSemi * body[iaBody[0]].dSemi /
@@ -4513,20 +4542,20 @@ double fdCTLDeccDt(BODY *body, UPDATE *update, int *iaBody) {
           (cos(body[iaBody[0]].dObliquity) *
                  body[iaBody[0]].dTidalF[iaBody[1]][3] *
                  body[iaBody[0]].dRotRate /
-                 (pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 10) *
-                  body[iaBody[0]].dMeanMotion) -
+                 (pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 1) *
+                  body[iaBody[0]].dMeanMotion) * pow(1., 10) -
            18 * body[iaBody[0]].dTidalF[iaBody[1]][2] /
-                 (11 * pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 13)));
+                 (11 * pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 4)) * pow(1., 13));
 
   // Contribution from central body
   dSum += body[iaBody[1]].dTidalZ[iaBody[0]] *
           (cos(body[iaBody[1]].dObliquity) *
                  body[iaBody[0]].dTidalF[iaBody[1]][3] *
                  body[iaBody[1]].dRotRate /
-                 (pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 10) *
-                  body[iaBody[0]].dMeanMotion) -
+                 (pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 1) *
+                  body[iaBody[0]].dMeanMotion) * pow(1., 10) -
            18 * body[iaBody[0]].dTidalF[iaBody[1]][2] /
-                 (11 * pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 13)));
+                 (11 * pow(body[iaBody[0]].dTidalBeta[iaBody[1]], 4))  * pow(1., 13));
 
   return 11 * body[iaBody[0]].dSemi * body[iaBody[0]].dEcc /
          (2 * BIGG * body[iaBody[0]].dMass * body[iaBody[1]].dMass) * dSum;
@@ -4548,11 +4577,11 @@ double fdCTLDrotrateDt(BODY *body, SYSTEM *system, int *iaBody) {
   }
 
   double tmp = 2 * cos(body[iaBody[0]].dObliquity) * body[iB0].dTidalF[iB1][1] /
-               pow(body[iB0].dTidalBeta[iB1], 12);
+               pow(body[iB0].dTidalBeta[iB1], 3) * pow(1., 12);
   tmp -= (1 +
           cos(body[iaBody[0]].dObliquity) * cos(body[iaBody[0]].dObliquity)) *
          body[iB0].dTidalF[iB1][4] * body[iaBody[0]].dRotRate /
-         (pow(body[iB0].dTidalBeta[iB1], 9) * body[iOrbiter].dMeanMotion);
+         (pow(body[iB0].dTidalBeta[iB1], 0) * body[iOrbiter].dMeanMotion) * pow(1., 9);
   tmp *= body[iB0].dTidalZ[iB1] /
          (2 * body[iaBody[0]].dMass * body[iaBody[0]].dRadGyra *
           body[iaBody[0]].dRadGyra * body[iaBody[0]].dTidalRadius *
@@ -4581,11 +4610,11 @@ double fdCTLDoblDt(BODY *body, int *iaBody) {
                 body[iaBody[0]].dTidalRadius * body[iOrbiter].dMeanMotion *
                 body[iaBody[0]].dRotRate);
   tmp *= ((cos(body[iaBody[0]].dObliquity) -
-           body[iB0].dTidalChi[iB1] / body[iB0].dTidalBeta[iB1]) *
+           body[iB0].dTidalChi[iB1] / body[iB0].dTidalBeta[iB1] * pow(1., 1)) *
                 body[iB0].dTidalF[iB1][4] * body[iaBody[0]].dRotRate /
-                (pow(body[iB0].dTidalBeta[iB1], 9) *
-                 body[iOrbiter].dMeanMotion) -
-          2 * body[iB0].dTidalF[iB1][1] / pow(body[iB0].dTidalBeta[iB1], 12));
+                (pow(body[iB0].dTidalBeta[iB1], 0) *
+                 body[iOrbiter].dMeanMotion) * pow(1., 9) -
+          2 * body[iB0].dTidalF[iB1][1] / pow(body[iB0].dTidalBeta[iB1], 3) * pow(1., 12));
   return tmp;
 }
 

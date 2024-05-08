@@ -1,0 +1,6 @@
+sName	                  star
+saModules	          stellar
+dMass                     0.08
+dAge                      -0.5
+sStellarModel             baraffe
+saOutputOrder	 	  Time -Luminosity Temperature

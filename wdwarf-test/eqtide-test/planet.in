@@ -1,0 +1,17 @@
+sName planet
+saModules eqtide
+
+dMass -1.0
+dRadius -1.0
+dRotPeriod -1.0
+bForceEqSpin 1
+
+dEcc 0.995
+dSemi -10.0
+
+dTidalTau 640
+dK2 0.3
+dMaxLockDiff 0.01
+saTidePerts wd
+
+saOutputOrder Time SemiMajorAxis Eccentricity LongP -RotPer -SurfEnFluxEqTide -SurfEnFluxTot

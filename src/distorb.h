@@ -15,7 +15,8 @@
 
 // Constants
 #define TEENY 1e-20 // Already a dTINY in vplanet.h! XXX
-#define MAXECCDISTORB 0.6627434
+// #define MAXECCDISTORB 0.6627434
+#define MAXECCDISTORB 1
 #define MAXMUTUALINCRD4 35 // Degrees
 #define MAXMUTUALINCLL2 10 // Degrees
 

@@ -147,7 +147,7 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
         printf("%d %d\n",iBody,iVar);
         fflush(stdout);
         */
-        if (update[iBody].iaType[iVar][0] == 0) {
+        if (abs(update[iBody].iaType[iVar][0]) == 0) {
           dVarNow = *update[iBody].pdVar[iVar];
           for (iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++) {
             update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](
@@ -178,7 +178,7 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
            integrated.  But in this case, since they are derived quantities,
            they should NOT participate in timestep selection - dflemin3
          */
-        } else if (update[iBody].iaType[iVar][0] == 5) {
+        } else if (abs(update[iBody].iaType[iVar][0]) == 5) {
           // continue;
           for (iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++) {
             update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](
@@ -186,7 +186,7 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
           }
           /* Integration for binary, where parameters can be computed via
          derivatives, or as an explicit function of age */
-        } else if (update[iBody].iaType[iVar][0] == 10) {
+        } else if (abs(update[iBody].iaType[iVar][0]) == 10) {
           /* Equations not in matrix, computing things as explicit function of
            time, so we set dMin to time until next output
            Figure out time until next output */
@@ -197,7 +197,7 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
           /* The parameter does not require a derivative, but is calculated
             explicitly as a function of age and is a sinusoidal quantity
             (e.g. h,k,p,q in DistOrb) */
-        } else if (update[iBody].iaType[iVar][0] == 3) {
+        } else if (abs(update[iBody].iaType[iVar][0]) == 3) {
           dVarNow = *update[iBody].pdVar[iVar];
           for (iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++) {
             update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](
@@ -390,6 +390,7 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
   /* Compute and apply a 4th order Runge-Kutta update step a given parameter. */
   int iBody, iVar, iEqn, iSubStep, iNumBodies, iNumVars, iNumEqns;
   double dFoo, dDelta;
+  double dDtScaled;
 
   EVOLVE *evolve = &(
         control->Evolve); // Save Evolve as a variable for speed and legibility
@@ -400,6 +401,7 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
   /* Derivatives at start */
   *dDt = fdGetTimeStep(body, control, system, control->Evolve.tmpUpdate,
                        fnUpdate);
+  dDtScaled = *dDt;
 
   /* Adjust dt? */
   if (evolve->bVarDt) {
@@ -432,15 +434,23 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     iNumVars = update[iBody].iNumVars;
     for (iVar = 0; iVar < iNumVars; iVar++) {
-      if (update[iBody].iaType[iVar][0] == 0 ||
-          update[iBody].iaType[iVar][0] == 3 ||
-          update[iBody].iaType[iVar][0] == 10) {
+      if (abs(update[iBody].iaType[iVar][0]) == 0 ||
+          abs(update[iBody].iaType[iVar][0]) == 3 ||
+          abs(update[iBody].iaType[iVar][0]) == 10) {
         // LUGER: Note that this is the VALUE of the variable getting passed,
         // contrary to what the names suggest These values are updated in the
         // tmpUpdate struct so that equations which are dependent upon them will
         // be evaluated with higher accuracy
         *(evolve->tmpUpdate[iBody].pdVar[iVar]) =
               evolve->daDeriv[0][iBody][iVar];
+      } else if (update[iBody].iaType[iVar][0] < 0) {
+        /* If negative type, then timestep is scaled. */
+        dDtScaled = *dDt / pow(
+              body[iBody].dTidalBeta[!iBody], 9);
+              // Divide by beta^9
+        *(evolve->tmpUpdate[iBody].pdVar[iVar]) = 
+              *(update[iBody].pdVar[iVar]) +
+              0.5 * dDtScaled * evolve->daDeriv[0][iBody][iVar];
       } else {
         /* While we're in this loop, move each parameter to the midpoint of the
          * timestep */
@@ -475,15 +485,23 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
     iNumVars = update[iBody].iNumVars;
     for (iVar = 0; iVar < iNumVars; iVar++) {
 
-      if (update[iBody].iaType[iVar][0] == 0 ||
-          update[iBody].iaType[iVar][0] == 3 ||
-          update[iBody].iaType[iVar][0] == 10) {
+      if (abs(update[iBody].iaType[iVar][0]) == 0 ||
+          abs(update[iBody].iaType[iVar][0]) == 3 ||
+          abs(update[iBody].iaType[iVar][0]) == 10) {
         // LUGER: Note that this is the VALUE of the variable getting passed,
         // contrary to what the names suggest These values are updated in the
         // tmpUpdate struct so that equations which are dependent upon them will
         // be evaluated with higher accuracy
         *(evolve->tmpUpdate[iBody].pdVar[iVar]) =
               evolve->daDeriv[1][iBody][iVar];
+      } else if (update[iBody].iaType[iVar][0] < 0) {
+        /* If negative type, then timestep is scaled. */
+        dDtScaled = *dDt / pow(
+              body[iBody].dTidalBeta[!iBody], 9);
+              // Divide by beta^9
+        *(evolve->tmpUpdate[iBody].pdVar[iVar]) = 
+              *(update[iBody].pdVar[iVar]) +
+              0.5 * dDtScaled * evolve->daDeriv[1][iBody][iVar];
       } else {
         /* While we're in this loop, move each parameter to the midpoint
         of the timestep based on the midpoint derivative. */
@@ -518,15 +536,23 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
     iNumVars = update[iBody].iNumVars;
     for (iVar = 0; iVar < iNumVars; iVar++) {
 
-      if (update[iBody].iaType[iVar][0] == 0 ||
-          update[iBody].iaType[iVar][0] == 3 ||
-          update[iBody].iaType[iVar][0] == 10) {
+      if (abs(update[iBody].iaType[iVar][0]) == 0 ||
+          abs(update[iBody].iaType[iVar][0]) == 3 ||
+          abs(update[iBody].iaType[iVar][0]) == 10) {
         // LUGER: Note that this is the VALUE of the variable getting passed,
         // contrary to what the names suggest These values are updated in the
         // tmpUpdate struct so that equations which are dependent upon them will
         // be evaluated with higher accuracy
         *(evolve->tmpUpdate[iBody].pdVar[iVar]) =
               evolve->daDeriv[2][iBody][iVar];
+      } else if (update[iBody].iaType[iVar][0] < 0) {
+        /* If negative type, then timestep is scaled. */
+        dDtScaled = *dDt / pow(
+              body[iBody].dTidalBeta[!iBody], 9);
+              // Divide by beta^9
+        *(evolve->tmpUpdate[iBody].pdVar[iVar]) = 
+              *(update[iBody].pdVar[iVar]) +
+              dDtScaled * evolve->daDeriv[2][iBody][iVar];
       } else {
         /* While we're in this loop, move each parameter to the end of
         the timestep based on the second midpoint derivative. */
@@ -548,9 +574,9 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
     iNumVars = update[iBody].iNumVars;
     for (iVar = 0; iVar < iNumVars; iVar++) {
       daDerivVar = 0;
-      if (update[iBody].iaType[iVar][0] == 0 ||
-          update[iBody].iaType[iVar][0] == 3 ||
-          update[iBody].iaType[iVar][0] == 10) {
+      if (abs(update[iBody].iaType[iVar][0]) == 0 ||
+          abs(update[iBody].iaType[iVar][0]) == 3 ||
+          abs(update[iBody].iaType[iVar][0]) == 10) {
         // NOTHING!
       } else {
         evolve->daDeriv[3][iBody][iVar] = 0;
@@ -581,9 +607,9 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
                                      evolve->daDerivProc[3][iBody][iVar][iEqn]);
       }
 
-      if (update[iBody].iaType[iVar][0] == 0 ||
-          update[iBody].iaType[iVar][0] == 3 ||
-          update[iBody].iaType[iVar][0] == 10) {
+      if (abs(update[iBody].iaType[iVar][0]) == 0 ||
+          abs(update[iBody].iaType[iVar][0]) == 3 ||
+          abs(update[iBody].iaType[iVar][0]) == 10) {
         // LUGER: Note that this is the VALUE of the variable getting passed,
         // contrary to what the names suggest
         *(update[iBody].pdVar[iVar]) = evolve->daDeriv[0][iBody][iVar];

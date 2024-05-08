@@ -1,0 +1,16 @@
+sSystemName     wdtides
+iVerbose        5
+bOverwrite      1
+saBodyFiles     wd.in planet.in
+sUnitMass       solar
+sUnitLength     aU
+sUnitTime       YEARS
+sUnitAngle      d
+sUnitTemp       K
+bDoLog          1
+iDigits         6
+dMinValue       1e-10
+bDoForward      1
+dEta            1.0e-16
+dStopTime       5.0e9
+dOutputTime     1.0e5

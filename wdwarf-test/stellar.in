@@ -1,5 +1,5 @@
 # Primary input file for VPLANET
-sSystemName     StellarEvol	       # System Name
+sSystemName     stellarevol	       # System Name
 iVerbose	5			# Verbosity level
 bOverwrite	1			# Allow file overwrites?
 
@@ -8,7 +8,7 @@ bOverwrite	1			# Allow file overwrites?
 # s=string. An "a" indicates an array and multiple arguments are allowed/expected.
 
 # List of "body files" that contain body-specific parameters
-saBodyFiles	stor.in	
+saBodyFiles	msstar.in	
 
 # Array options can continue to the next line with a terminating "$". The $ can be 
 # at the end of the string or not. Comments are allowed afterwards.
@@ -35,5 +35,5 @@ dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 bDoForward	1		    # Perform a forward evolution?
 bVarDt		  1		    # Use variable timestepping?
 dEta		    0.01		# Coefficient for variable timestepping
-dStopTime	9.99e8   # Stop time for evolution
+dStopTime	5.0e9   # Stop time for evolution
 dOutputTime	5e4		# Output timesteps (assuming in body files)

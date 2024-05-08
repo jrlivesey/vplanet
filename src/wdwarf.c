@@ -2,7 +2,7 @@
     @file wdwarf.c
     @brief Subroutines that control the evolution of a white dwarf primary.
     @author Joseph Livesey ([jrlivesey@wisc.edu](mailto:jrlivesey@wisc.edu>))
-    @date 2023
+    @date 2024
 */
 
 #include "vplanet.h"
@@ -191,13 +191,13 @@ void InitializeOptionsWdwarf(OPTIONS *options, fnReadOption *fnRead) {
           "If 0, uses hydrogen envelope BaSTI grid. If 1, uses helium \n"
           "envelope BaSTI grid.\n");
   
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cName, "bHaltEndBastiGrid");
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cDescr,
+  sprintf(options[OPT_HALTENDBASTIGRID].cName, "bHaltEndBastiGrid");
+  sprintf(options[OPT_HALTENDBASTIGRID].cDescr,
           "Halt when we reach the end of the BaSTI grid?");
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cDefault, "1");
-  options[OPT_HALTENDBARAFFEFGRID].iType = 0;
-  fnRead[OPT_HALTENDBARAFFEFGRID]        = &ReadHaltEndBastiGrid;
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cLongDescr,
+  sprintf(options[OPT_HALTENDBASTIGRID].cDefault, "1");
+  options[OPT_HALTENDBASTIGRID].iType = 0;
+  fnRead[OPT_HALTENDBASTIGRID]        = &ReadHaltEndBastiGrid;
+  sprintf(options[OPT_HALTENDBASTIGRID].cLongDescr,
           "The BaSTI WD model will only compute parameters until about 10 Gyr\n"
           "after the main sequence. Setting this flag to 1 will halt the code\n"
           "if the end of the model grid is reached.");
@@ -266,11 +266,30 @@ void VerifyTemperatureWdwarf(BODY *body, CONTROL *control, OPTIONS *options,
         &update[iBody].daDerivProc[update[iBody].iTemperature][0];
 }
 
+void VerifyXUVLuminosityWdwarf(BODY *body, CONTROL *control, OPTIONS *options,
+                               UPDATE *update, double dAge, int iBody) {
+
+  if (body[iBody].iWDModel == WDWARF_MODEL_BASTI) {
+    body[iBody].dLXUV = fdXUVLuminosity(body, iBody);
+  } else {
+    // ?
+  }
+  
+  update[iBody].iaType[update[iBody].iLXUV][0]     = 0;
+  update[iBody].iNumBodies[update[iBody].iLXUV][0] = 1;
+  update[iBody].iaBody[update[iBody].iLXUV][0]     = malloc(
+            update[iBody].iNumBodies[update[iBody].iLXUV][0] * sizeof(int));
+  update[iBody].iaBody[update[iBody].iLXUV][0][0] = iBody;
+
+  update[iBody].pdLXUVWdwarf =
+        &update[iBody].daDerivProc[update[iBody].iLXUV][0];
+}
+
 void VerifyRadiusWdwarf(BODY *body, CONTROL *control, OPTIONS *options,
                         UPDATE *update, int iBody) {
   
-  if (body[iBody].iWDModel == WDWARF_MODEL_BASTI) {
-    if (options[OPT_TEMPERATURE].iLine[iBody+1] < 0) {
+  // if (body[iBody].iWDModel == WDWARF_MODEL_BASTI) {
+  //   if (options[OPT_RADIUS].iLine[iBody+1] < 0) {
       body[iBody].dRadius = REARTH;
       // if (body[iBody].dMass < MSUN) {
       //   // If the user did not set the radius, calculate from power law
@@ -286,8 +305,8 @@ void VerifyRadiusWdwarf(BODY *body, CONTROL *control, OPTIONS *options,
       //   }
       //   exit(1);
       // }
-    }
-  }
+    // }
+  // }
 }
 
 void VerifyTidalQ(BODY *body, CONTROL *control, OPTIONS *options,
@@ -314,15 +333,17 @@ void fnForceBehaviorWdwarf(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
 
 void AssignWdwarfDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
                              fnUpdateVariable ***fnUpdate, int iBody) {
-  // The "derivatives" just point to the values for both of these quantities!
+  // The "derivatives" just point to the values for all of these quantities!
   fnUpdate[iBody][update[iBody].iLuminosity][0] = &fdLuminosityWdwarf;
   fnUpdate[iBody][update[iBody].iTemperature][0] = &fdTemperatureWdwarf;
+  fnUpdate[iBody][update[iBody].iLXUV][0] = &fdLXUVWdwarf;
 }
 
 void NullWdwarfDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
                            fnUpdateVariable ***fnUpdate, int iBody) {
   fnUpdate[iBody][update[iBody].iLuminosity][0] = &fndUpdateFunctionTiny;
   fnUpdate[iBody][update[iBody].iTemperature][0] = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iLXUV][0] = &fndUpdateFunctionTiny;
 }
 
 void VerifyWdwarf(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -340,15 +361,15 @@ void VerifyWdwarf(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     exit(EXIT_INPUT);
   }
 
-  if (update[iBody].iNumRadius > 1) {
-    if (control->Io.iVerbose >= VERBERR) {
-      fprintf(stderr,
-              "ERROR: Looks like there's more than one equation trying to set "
-              "dRadius for body %d!",
-              iBody);
-    }
-    exit(EXIT_INPUT);
-  }
+  // if (update[iBody].iNumRadius > 1) {
+  //   if (control->Io.iVerbose >= VERBERR) {
+  //     fprintf(stderr,
+  //             "ERROR: Looks like there's more than one equation trying to set "
+  //             "dRadius for body %d!",
+  //             iBody);
+  //   }
+  //   exit(EXIT_INPUT);
+  // }
 
   if (update[iBody].iNumTemperature > 1) {
     if (control->Io.iVerbose >= VERBERR) {
@@ -358,15 +379,29 @@ void VerifyWdwarf(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
               iBody);
     }
     exit(EXIT_INPUT);
+
+    if (update[iBody].iNumLXUV > 1) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr,
+              "ERROR: Looks like there's more than one equation trying to set "
+              "dLXUV for body %d!",
+              iBody);
+      }
+    }
   }
 
   VerifyLuminosityWdwarf(body, control, options, update, body[iBody].dAge, iBody);
   VerifyTemperatureWdwarf(body, control, options, update, body[iBody].dAge, iBody);
+  VerifyXUVLuminosityWdwarf(body, control, options, update, body[iBody].dAge, iBody);
   VerifyRadiusWdwarf(body, control, options, update, iBody);
 
   control->fnPropsAux[iBody][iModule] = &fnPropsAuxWdwarf;
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorWdwarf;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyWdwarf;
+
+  // fprintf(stderr, "%f\n", body[iBody].dLuminosity);
+  // fprintf(stderr, "%f\n", fdXUVFracWdwarf(body, iBody) * body[iBody].dLuminosity);
+  // fprintf(stderr, "%f\n\n\n", body[iBody].dLXUV);
 }
 
 void ReadOptionsWdwarf(BODY *body, CONTROL *control, FILES *files,
@@ -408,6 +443,11 @@ void InitializeUpdateWdwarf(BODY *body, UPDATE *update, int iBody) {
     }
     update[iBody].iNumTemperature++;
   }
+
+  if (update[iBody].iNumLXUV == 0) {
+    update[iBody].iNumVars++;
+  }
+  update[iBody].iNumLXUV++;
 }
 
 void FinalizeUpdateLuminosityWdwarf(BODY *body, UPDATE *update, int *iEqn,
@@ -422,19 +462,24 @@ void FinalizeUpdateTemperatureWdwarf(BODY *body, UPDATE *update, int *iEqn,
   update[iBody].iNumTemperature       = (*iEqn)++;
 }
 
+void FinalizeUpdateLXUVWdwarf(BODY *body, UPDATE *update, int *iEqn, int iVar,
+                              int iBody, int foo) {
+  update[iBody].iaModule[iVar][*iEqn] = WDWARF;
+  update[iBody].iNumLXUV              = (*iEqn)++;
+}
+
 /**************** WDWARF Outputs ****************/
 
 void WriteLuminosityWdwarf(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                      double *dTmp, char cUnit[]) {
   *dTmp = body[iBody].dLuminosity;
-
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
-    fsUnitsPower(units, cUnit);
+    // *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
+    // fsUnitsPower(units, cUnit);
   }
 }
 
@@ -444,19 +489,22 @@ void WriteTemperatureWdwarf(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dTemperature;
   // Kelvin only
   fsUnitsTemp(0, cUnit);
+
+  if (body[iBody].dTemperature == 1.0) {
+    exit(0);
+  }
 }
 
 void WriteLXUVWdwarf(BODY *body, CONTROL *control, OUTPUT *output,
                SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                double *dTmp, char cUnit[]) {
   *dTmp = body[iBody].dLXUV;
-
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
-    fsUnitsPower(units, cUnit);
+    // *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
+    // fsUnitsPower(units, cUnit);
   }
 }
 
@@ -548,100 +596,168 @@ void AddModuleWdwarf(CONTROL *control, MODULE *module, int iBody, int iModule) {
 
   module->iaModule[iBody][iModule] = WDWARF;
 
-  module->fnReadOptions[iBody][iModule]       = &ReadOptionsWdwarf;
-  module->fnLogBody[iBody][iModule]           = &LogBodyWdwarf;
-  module->fnVerify[iBody][iModule]            = &VerifyWdwarf;
-  module->fnCountHalts[iBody][iModule]        = &CountHaltsWdwarf;
-  module->fnVerifyHalt[iBody][iModule]        = &VerifyHaltWdwarf;
-  module->fnAssignDerivatives[iBody][iModule] = &AssignWdwarfDerivatives;
-  module->fnNullDerivatives[iBody][iModule]   = &NullWdwarfDerivatives;
-  module->fnInitializeUpdate[iBody][iModule]  = &InitializeUpdateWdwarf;
+  module->fnReadOptions[iBody][iModule]        = &ReadOptionsWdwarf;
+  module->fnLogBody[iBody][iModule]            = &LogBodyWdwarf;
+  module->fnVerify[iBody][iModule]             = &VerifyWdwarf;
+  module->fnCountHalts[iBody][iModule]         = &CountHaltsWdwarf;
+  module->fnVerifyHalt[iBody][iModule]         = &VerifyHaltWdwarf;
+  module->fnAssignDerivatives[iBody][iModule]  = &AssignWdwarfDerivatives;
+  module->fnNullDerivatives[iBody][iModule]    = &NullWdwarfDerivatives;
+  module->fnInitializeUpdate[iBody][iModule]   = &InitializeUpdateWdwarf;
   module->fnFinalizeUpdateLuminosity[iBody][iModule] =
         &FinalizeUpdateLuminosityWdwarf;
   module->fnFinalizeUpdateTemperature[iBody][iModule] = 
         &FinalizeUpdateTemperatureWdwarf;
+  module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateLXUVWdwarf;
 }
 
 /*************** WDWARF Functions ***************/
 
-double fdTrapezoid(BODY *body, int iBody,
-                   double (*func)(BODY *, int, double), double lo,
-                   double hi, int n) {
-    // Numerical integration of an arbitrary function via the trapezoid rule
-    // on the interval [lo, hi].
-    double h, res;
-    int k;
-    h = (hi - lo) / n;
-    res = 0.5 * h * (func(body, iBody, lo) + func(body, iBody, hi));
-    for (k=1; k<n; k++) {
-        res += h * func(body, iBody, lo + k * h);
-    }
-    return res;
-}
+// double fdTrapezoid(BODY *body, int iBody,
+//                    double (*func)(BODY *, int, double), double lo,
+//                    double hi, int n) {
+//   // Numerical integration of an arbitrary function via the trapezoid rule
+//   // on the interval [lo, hi].
+//   double h, res;
+//   int k;
+//   h = (hi - lo) / n;
+//   res = 0.5 * h * (func(body, iBody, lo) + func(body, iBody, hi));
+//   for (k=1; k<n; k++) {
+//       res += h * func(body, iBody, lo + k * h);
+//   }
+//   return res;
+// }
 
-double fdRomberg(BODY *body, int iBody, double (*func)(BODY *, int, double),
-                 double lo, double hi) {
-    // Romberg integration of an arbitrary function on the interval [lo, hi].
-    double R[JMAX+1][JMAX+1];
-    double h, res;
-    int j, k;
-    int n = 1e2; // Number of steps
+// double fdRomberg(BODY *body, int iBody, double (*func)(BODY *, int, double),
+//                  double lo, double hi) {
+//   // Romberg integration of an arbitrary function on the interval [lo, hi].
+//   double R[JMAX+1][JMAX+1];
+//   double h, res;
+//   int j, k;
+//   int n = 1e2; // Number of steps
 
-    for (j=0; j<=JMAX; j++) {
-        h = (hi - lo) / n; // Step size
-        R[j][0] = fdTrapezoid(body, iBody, func, lo, hi, n);
-        for (k=1; k<=j; k++) {
-            R[j][k] = R[j][k-1] + 1.0/(pow(4.0, k) - 1.0) *
-                      (R[j][k-1] - R[j-1][k-1]);
-        }
-        n *= 2; // Increase number of steps
-    }
-    return R[JMAX][JMAX];
+//   for (j=0; j<=JMAX; j++) {
+//       h = (hi - lo) / n; // Step size
+//       R[j][0] = fdTrapezoid(body, iBody, func, lo, hi, n);
+//       for (k=1; k<=j; k++) {
+//           R[j][k] = R[j][k-1] + 1.0/(pow(4.0, k) - 1.0) *
+//                     (R[j][k-1] - R[j-1][k-1]);
+//       }
+//       n *= 2; // Increase number of steps
+//   }
+//   return R[JMAX][JMAX];
+// }
+
+// double fdIntegratePlanckSpectrum(BODY *body, int iBody, double lo, double hi) {
+//   // Integral of the Planck spectrum over frequency from lo to hi.
+//   double dTemp = body[iBody].dTemperature;
+//   double res;
+
+//   res = fdRomberg(body, iBody, fdPlanckSpectrum, lo, hi);
+//   return res;
+// }
+
+// double fdIntegrateTotalPlanckSpectrum(BODY *body, int iBody) {
+//   // Integral of the total Planck spectrum from 0 to +inf.
+//   double dTemp = body[iBody].dTemperature;
+//   double res;
+  
+//   res = fdRomberg(body, iBody, fdPlanckSpectrumTransform, 0.0, 1.0);
+//   return res;
+// }
+
+// double fdPlanckSpectrum(BODY *body, int iBody, double dFreq) {
+//   // Spectral energy density of a blackbody (IN SI UNITS)
+//   double res;
+//   double dTemp = body[iBody].dTemperature;
+//   res = 8.0 * PI * HPLANCK * pow(dFreq, 3) / pow(LIGHTSPEED, 3) 
+//         / (exp(KBOLTZ / HPLANCK * dTemp / dFreq) - 1.0);
+//   return res;
+// }
+
+// double fdPlanckSpectrumTransform(BODY *body, int iBody, double dTransFreq) {
+//   // Transformed Planck spectrum for calculating total integral.
+//   double order = 10;
+
+//   double res;
+//   double dTemp = body[iBody].dTemperature;
+
+//   double a = pow(dTransFreq, order);
+//   double b = pow(1. - dTransFreq, order);
+
+//   double foo = pow(dTransFreq, order) / pow(1.0 - dTransFreq, order);
+//   res = fdPlanckSpectrum(body, iBody, foo);
+//   res *= order * pow(dTransFreq, order - 1) / pow(1.0 - dTransFreq, order + 1);
+//   fprintf(stderr, "%f", res);
+//   return 0;
+//   // return res;
+// }
+
+double fdBlackbodyIntegral(BODY *body, int iBody, double wnum) {
+  // Integral of the blackbody spectrum in wavenumber space from wnum to +inf.
+  // Following Michels (1968).
+  double var, term, res;
+  int n;
+  double temp = body[iBody].dTemperature;
+  // double c1 = 2 * PI * HPLANCK * pow(LIGHTSPEED, 2);
+  double c2 = HPLANCK * LIGHTSPEED / KBOLTZ;
+  
+  res = 0.0;
+  for (n=1; n<=100; n++) {
+    var = n * c2 * wnum / temp;
+    term = pow(var, 3) + 3 * pow(var, 2) + 6 * var + 6.0;
+    term *= 15.0 / pow(PI, 4) * exp(-var) / pow(n, 4);
+    res += term;
+  }
+  return res;
 }
 
 double fdXUVFracWdwarf(BODY *body, int iBody) {
   // Returns the fraction of the bolometric luminosity within the XUV regime,
   // assuming a perfect blackbody.
-  double intxuv, norm, res;
-  double lo = XUV_LO;
-  double hi = XUV_HI;
+  // double intxuv, norm, res;
+  // double lo = XUV_LO;
+  // double hi = XUV_HI;
 
-  intxuv = fdIntegratePlanckSpectrum(body, iBody, lo, hi);
-  norm = fdIntegrateTotalPlanckSpectrum(body, iBody);
-  res = intxuv/norm;
+  // intxuv = fdIntegratePlanckSpectrum(body, iBody, lo, hi);
+  // norm = fdIntegrateTotalPlanckSpectrum(body, iBody);
+  // res = intxuv/norm;
+
+  double xuvfrac, lo, hi;
+
+  // Convert to wavenumbers
+  lo = XUV_LO / LIGHTSPEED;
+  hi = XUV_HI / LIGHTSPEED;
+
+  xuvfrac = fdBlackbodyIntegral(body, iBody, lo) -
+            fdBlackbodyIntegral(body, iBody, hi);
+  return xuvfrac;
+}
+
+double fdXUVLuminosity(BODY *body, int iBody) {
+  double xuvfrac, res;
+  xuvfrac = fdXUVFracWdwarf(body, iBody);
+  res = xuvfrac * body[iBody].dLuminosity;
+  // fprintf(stderr, "%f \n\n\n", body[iBody].dLXUV);
+  // fprintf(stderr, "%f \n", res);
   return res;
-}
-
-double fdIntegratePlanckSpectrum(BODY *body, int iBody, double lo, double hi) {
-  // Integral of the Planck spectrum over frequency from lo to hi.
-  double dTemp = body[iBody].dTemperature;
-  /*
-    Integration here
-  */
-}
-
-double fdIntegrateTotalPlanckSpectrum(BODY *body, int iBody) {
-  // Integral of the total Planck spectrum from 0 to +inf.
-  double dTemp = body[iBody].dTemperature;
-  /*
-    Integration here
-  */
-}
-
-double fdPlanckSpectrum(BODY *body, int iBody, double dFreq) {
-  // Spectral energy density of a blackbody (IN SI UNITS)
-  double res;
-  double dTemp = body[iBody].dTemperature;
-  res = 8.0 * PI * HPLANCK * pow(dFreq, 3) / pow(LIGHTSPEED, 3) 
-        / (exp(KBOLTZ / HPLANCK * dTemp / dFreq) - 1.0);
-  return res;
+  // return 0.0;
 }
 
 double fdLXUVWdwarf(BODY *body, SYSTEM *system, int *iaBody) {
-  double xuvfrac, res;
-  xuvfrac = fdXUVFracWdwarf(body, iaBody[0]);
-  res = xuvfrac * body[iaBody[0]].dLuminosity;
-  return res;
+  // double res = fdXUVLuminosity(body, iaBody[0]);
+  double lumi, frac, res;
+  lumi = fdLuminosityWdwarf(body, system, iaBody);
+  frac = fdXUVFracWdwarf(body, iaBody[0]);
+  res = lumi * frac;
+  // fprintf(stderr, "%f\n\n", body[iaBody[0]].dLXUV);
+  // fprintf(stderr, "%f\n\n", body[iaBody[0]].dLuminosity);
+  // fprintf(stderr, "%f\n\n", body[iaBody[0]].dTemperature);
+  // fprintf(stderr, "%f\n", frac);
+  // fprintf(stderr, "%f\n", res);
+  // return res;
+  // return frac;
+  return 0.0;
 }
 
 // double fdRadiusWdwarf(BODY *body, int iBody) {

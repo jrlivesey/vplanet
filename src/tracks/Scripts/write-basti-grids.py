@@ -46,21 +46,21 @@ class NameFormatError(Exception):
 
 
 
-def blackbody_spectrum(freq, temp):
-    temp *= u.K
-    freq *= u.Hz
-    spec = 2. * const.h * freq ** 3 / (const.c ** 2) \
-            * 1./(np.exp(const.h * freq / (const.k_B * temp)) - 1.)
-    return spec / spec.unit
+# def blackbody_spectrum(freq, temp):
+#     temp *= u.K
+#     freq *= u.Hz
+#     spec = 2. * const.h * freq ** 3 / (const.c ** 2) \
+#             * 1./(np.exp(const.h * freq / (const.k_B * temp)) - 1.)
+#     return spec / spec.unit
 
 
 
-def xuv_frac(temp):
-    lbol, _ = quad(lambda v: blackbody_spectrum(v, temp), 0.0, 1.0e+50,
-                   points=[1.0e+13, 2.0e+15])
-    lxuv, _ = quad(lambda v: blackbody_spectrum(v, temp), 2.48e+15, 3.0e+16)
-    fxuv = lxuv / lbol
-    return fxuv
+# def xuv_frac(temp):
+#     lbol, _ = quad(lambda v: blackbody_spectrum(v, temp), 0.0, 1.0e+50,
+#                    points=[1.0e+13, 2.0e+15])
+#     lxuv, _ = quad(lambda v: blackbody_spectrum(v, temp), 2.48e+15, 3.0e+16)
+#     fxuv = lxuv / lbol
+#     return fxuv
 
 
 
@@ -179,7 +179,7 @@ def get_raw_data(subdir):
             df = pd.read_table(
                 file,
                 comment="#",
-                delim_whitespace=True,
+                sep='\s+',
                 header=None,
                 names=[
                     'log(t)',
@@ -233,7 +233,7 @@ def plot_tracks(quantity, data, age, orig, interp):
             )
             ax.scatter(
                 10. ** age[str(group)],
-                10. ** orig[str(group)],
+                10. ** np.array([float(o) for o in orig[str(group)]]),
                 label=str(group),
                 color='C%d' % (i % 9),
                 s=20,
@@ -316,30 +316,43 @@ def linear_interpolate_and_extrapolate(subdir):
     for group in groups:
         # Indices of rows in DataFrame corresponding to a single track
         inds = np.array(groups[group])
+        data_m = data.loc[data['log(t)'] != 0.0]
+        data_m = data_m.loc[data_m['Mwd'] == group]
 
         # Extract data
-        basti_age[str(group)]  = data.values[inds, 0]
-        basti_lum[str(group)]  = data.values[inds, 3]
-        basti_teff[str(group)] = data.values[inds, 2]
+        basti_age[str(group)]  = data_m['log(t)'].to_numpy()
+        basti_lum[str(group)]  = data_m['log(L/Lo)'].to_numpy()
+        basti_teff[str(group)] = data_m['log(Teff)'].to_numpy()
+        # print(basti_age[str(group)].shape)
+        # basti_age[str(group)]  = data.values[inds, 0]
+        # basti_lum[str(group)]  = data.values[inds, 3]
+        # basti_teff[str(group)] = data.values[inds, 2]
 
         # Build linear interpolation functions
-        basti_lum_interp_funcs[str(group)] = interp1d(
-            basti_age[str(group)],
-            basti_lum[str(group)],
-            kind='linear',
-            fill_value=np.nan,
-            assume_sorted=True,
-            bounds_error=False,
-        )
+        try:
+            basti_lum_interp_funcs[str(group)] = interp1d(
+                basti_age[str(group)],
+                basti_lum[str(group)],
+                kind='linear',
+                fill_value=np.nan,
+                assume_sorted=True,
+                bounds_error=False,
+            )
 
-        basti_teff_interp_funcs[str(group)] = interp1d(
-            basti_age[str(group)],
-            basti_teff[str(group)],
-            kind='linear',
-            fill_value=np.nan,
-            assume_sorted=True,
-            bounds_error=False,
-        )
+            basti_teff_interp_funcs[str(group)] = interp1d(
+                basti_age[str(group)],
+                basti_teff[str(group)],
+                kind='linear',
+                fill_value=np.nan,
+                assume_sorted=True,
+                bounds_error=False,
+            )
+
+        except ValueError as verr:
+            print(verr)
+            print(subdir)
+            print(group)
+            exit(0)
 
         basti_lum_interp[str(group)] = basti_lum_interp_funcs[str(group)](
             np.log10(aarr * 1.e9)
@@ -382,8 +395,30 @@ def linear_interpolate_and_extrapolate(subdir):
     basti_teff_interp[int_idx] = snd + (snd - fst) / (snd_mass - fst_mass) \
                                 * (int_mass - snd_mass)
     
-    # Calculate XUV fraction from temperature
-    xuv_fracs = xuv_frac(basti_teff_interp)
+
+    # # debuggin
+    # fig, axes = plt.subplots()
+    # ax = axes
+    # for mval in groups:
+    #     age_data = basti_age[str(mval)]
+
+    #     # print(basti_lum[str(mval)])
+    #     # for _ in range(50): print()
+    #     # print(basti_lum_interp[str(mval)])
+    #     # exit(0)
+
+    #     ax.scatter(age_data, basti_lum[str(mval)], c='b', s=5)
+    #     ax.scatter(np.log10(aarr * 1.e9), basti_lum_interp[str(mval)], c='r', s=2)
+    #     # axes[0].scatter(age_data, mval*np.ones_like(age_data), c=basti_lum[str(mval)], s=5)
+    #     # axes[1].scatter(aarr, mval*np.ones_like(aarr), c=basti_lum_interp[str(mval)], s=2)
+    #     # cb = plt.colorbar()
+    #     break
+    # plt.show(); exit(0)
+
+
+    
+    # # Calculate XUV fraction from temperature
+    # xuv_fracs = xuv_frac(basti_teff_interp)
 
     # Write each grid in vplanet-readable format
     for _ in range(10): print()
@@ -391,15 +426,16 @@ def linear_interpolate_and_extrapolate(subdir):
           Z = {grid.metallicity}')
     write_grid('L', data, basti_lum_interp)
     write_grid('T', data, basti_teff_interp)
-    write_grid('f', data, xuv_fracs)
+    # write_grid('f', data, xuv_fracs)
 
 
 
 def main():
     grids = []
     path = pathlib.Path()
-    grids_path = path / '../Data/basti-grids'
+    grids_path = path / 'tracks/Data/basti-grids'
     for subdir in grids_path.iterdir():
+        # print(subdir)
         if subdir.is_dir():
             linear_interpolate_and_extrapolate(subdir)
 
