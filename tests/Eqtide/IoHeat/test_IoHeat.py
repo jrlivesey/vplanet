@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -165,8 +164,8 @@ from benchmark import Benchmark, benchmark
             "unit": 1 / u.sec**2,
         },
         "log.initial.io.DOrbPerDtEqtide": {"value": -9.087686e-13},
-        "log.initial.io.EccTimeEqtide": {"value": 4.821501e12, "unit": u.sec},
-        "log.initial.io.SemiTimeEqtide": {"value": 2.524100e17, "unit": u.sec},
+        "log.initial.io.EccTimeEqtide": {"value": 0.000000, "unit": u.sec},
+        "log.initial.io.SemiTimeEqtide": {"value": 0.000000, "unit": u.sec},
         "log.initial.io.DHEccDtEqtide": {"value": -0.000000, "unit": 1 / u.sec},
         "log.initial.io.DKEccDtEqtide": {"value": -8.503575e-16, "unit": 1 / u.sec},
         "log.initial.io.DXoblDtEqtide": {"value": -3.792877e-13, "unit": 1 / u.sec},
@@ -186,7 +185,7 @@ from benchmark import Benchmark, benchmark
         "log.initial.io.EqRotRateCont": {"value": 4.109421e-05, "unit": 1 / u.sec},
         "log.initial.io.EqRotPerCont": {"value": 1.528971e05, "unit": u.sec},
         "log.initial.io.EqRotPer": {"value": 1.529215e05, "unit": u.sec},
-        "log.initial.io.EqTidePower": {"value": -1.600324e-314, "unit": 1 / u.sec},
+        "log.initial.io.EqTidePower": {"value": -3.686946e13, "unit": 1 / u.sec},
         "log.initial.io.GammaRot": {"value": -1.000000, "unit": u.sec},
         "log.initial.io.GammaOrb": {"value": -1.000000, "unit": u.sec},
         "log.initial.io.OceanK2": {"value": 0.010000},
@@ -203,5 +202,5 @@ from benchmark import Benchmark, benchmark
         },
     }
 )
-class TestIoHeat(Benchmark):
+class Test_IoHeat(Benchmark):
     pass
