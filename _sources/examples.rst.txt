@@ -12,44 +12,46 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/GalaxyEffects
-   examples/EarthInterior
-   examples/MiniNeptuneEvap
-   examples/MDwarfLuminosity
-   examples/IoHeat
-   examples/NBodyAtmEsc
-   examples/RadHeat
-   examples/HabitableZone
-   examples/AtmEscRegimes
-   examples/ParameterSweep
-   examples/EarthClimate
-   examples/WaterLossTides
-   examples/HLossTides
-   examples/MagmOc_Trappist1g
-   examples/AbioticO2
-   examples/MagneticBraking
-   examples/VenusApproxInterior
-   examples/CassiniStates
-   examples/DampedCBP
-   examples/HabEvapCore
-   examples/StellarEvol
+   examples/TideLock
+   examples/FfdProxCen
    examples/SSDistOrbDistRot
-   examples/AtmEscFlareProxCen
-   examples/MagmOc_Earth
+   examples/VenusWaterLoss
+   examples/ApseLock
+   examples/STEEP
+   examples/RadHeat
+   examples/HabEvapCore
+   examples/CircumbinaryOrbit
+   examples/NBodyAtmEsc
    examples/IceBelts
+   examples/MiniNeptuneEvap
    examples/AtmEscKepler-36
+   examples/WaterLossTides
+   examples/DampedCBP
+   examples/ParameterSweep
+   examples/DiffLimWaterEscape
    examples/BinaryTides
    examples/MagmOc_GJ1132b
-   examples/TideLock
-   examples/STEEP
-   examples/VenusWaterLoss
-   examples/FfdProxCen
-   examples/CircumbinaryOrbit
-   examples/CassiniMulti
    examples/ChaoticResonances
-   examples/TidalEarth
-   examples/ApseLock
+   examples/StellarEvol
+   examples/MDwarfLuminosity
+   examples/CassiniStates
+   examples/MagmOc_Trappist1g
+   examples/AtmEscFlareProxCen
+   examples/CassiniMulti
+   examples/AtmEscRegimes
+   examples/HabitableZone
    examples/SS_NBody
+   examples/HLossTides
+   examples/EarthInterior
+   examples/MagmOc_Earth
+   examples/VenusApproxInterior
+   examples/GalaxyEffects
+   examples/TidalEarth
+   examples/LuminosityCycle
+   examples/IoHeat
+   examples/MagneticBraking
+   examples/AbioticO2
+   examples/EarthClimate
 
 
 Broken
